@@ -9,7 +9,7 @@ sample_dict = {
     'description': ['chips', 'bill', 'noodles']
 }
 
-sample_tag = ["snacks","bills","subcription"]
+sample_tag = ["snacks","bills","subcriptions"]
 
 def dashboard_page():
     root = Tk()
