@@ -107,9 +107,9 @@ def input_page(main_dict, main_tag):
         tag_button[main_tag[i]].grid(column=i,row=1)
 
 
-    def input_amount():
-        amount = amount_entry.get()
-        return amount
+    #def input_amount():
+    #    amount = amount_entry.get()
+    #    return amount
 
     #amount_entry = Entry(root)
     #amount_entry.insert(0, "Enter the amount")
