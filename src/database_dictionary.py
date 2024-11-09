@@ -17,7 +17,7 @@ def get_main_tags_set():
     return tag_set
 
 def main_dictionary():
-    data = pd.read_excel('budgeting_program/database/empty_database.xlsx')
+    data = pd.read_excel('budgeting_program/database/sample_database.xlsx')
     main_dict = dict()
 
     keys_list = list(data.columns)
