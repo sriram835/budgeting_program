@@ -3,6 +3,7 @@ from tkcalendar import DateEntry
 import customtkinter
 from src.database_dictionary import *
 from src.sorting_dict import *
+import time
 
 sample_dict = {
     'id': [1,2,3],
@@ -62,28 +63,55 @@ def input_page(main_dict, main_tag):
     root.rowconfigure(2, weight=1)
     root.rowconfigure(3, weight=1)
     root.rowconfigure(4, weight=1)
+    root.rowconfigure(5, weight=1)
+
+
+    cal_frame = Frame(root)
+    cal_frame.grid(column=0, row=0)
+    cal_frame.columnconfigure(0, weight=1)
+    cal_frame.columnconfigure(1, weight=1)
+    cal_frame.rowconfigure(0, weight=1)
+    
+    tag_frame2 = Frame(root)
+    tag_frame2.grid(column=0, row=1)
 
     tag_frame1 = Frame(root)
     tag_frame1.grid(column=0, row=2)
 
-    tag_frame2 = Frame(root)
-    tag_frame2.grid(column=0, row=1)
+    amount_frame =Frame(root)
+    amount_frame.columnconfigure(0, weight=1)
+    amount_frame.columnconfigure(1, weight=1)
+    amount_frame.rowconfigure(0, weight=1)
+    amount_frame.grid(column=0,row=3)
+    
+    enter_data_frame = Frame(root)
+    enter_data_frame.grid(column=0, row=4)
 
-    cal_frame = Frame(root)
-    cal_frame.grid(column=0, row=0)
-
-    date = int()
     tag_button = dict()
-    amount = int()
-    description = ""
+    
+
+    # Create a Date Entry widget
+    cal = DateEntry(cal_frame, width=12, background="darkblue", foreground="white", borderwidth=2)
+    cal.grid(row=0,column=1)
+
+    cal_label = Label(cal_frame, text="Enter date")
+    cal_label.grid(column=0, row=0)
+
+    uncut_date = str(cal.get_date())
+    uncut_date = uncut_date.split("-")
+    year = int(uncut_date[0][2:4])
+    month = int(uncut_date[1])
+    day = int(uncut_date[2])
+
+    date = year*10000 + month*100 + day
 
     def tag_updation(new_tag):
+        global tag
+        tag = new_tag
         tag_selection.configure(state=NORMAL)
         tag_selection.delete(0, END)
         tag_selection.insert(0,new_tag)
         tag_selection.configure(state=DISABLED, disabledbackground="white",disabledforeground="black", cursor="arrow")
-        global tag
-        tag = new_tag
     
     
 
@@ -96,11 +124,11 @@ def input_page(main_dict, main_tag):
     tag_selection = Entry(tag_frame1, state=DISABLED)
     tag_selection.grid(column=1, row=0)
 
-    tag_updation("")
     
-    # Create a Date Entry widget
-    cal = DateEntry(cal_frame, width=12, background="darkblue", foreground="white", borderwidth=2)
-    cal.grid(row=0,column=0)
+    tag = main_tag[0]
+    
+    tag_updation(tag)
+
 
     for i in range(len(main_tag)):
         def action(x = main_tag[i]):
@@ -110,27 +138,71 @@ def input_page(main_dict, main_tag):
         tag_button[main_tag[i]].grid(column=i,row=1)
 
 
-    #def input_amount():
-    #    amount = amount_entry.get()
-    #    return amount
 
-    #amount_entry = Entry(root)
-    #amount_entry.insert(0, "Enter the amount")
-    #amount_entry.bind("<FocusIn>", lambda args: [amount_entry.delete('0', 'end')])
-    #amount_entry.bind("<FocusOut>", lambda args: [input_amount()])
-    
-   
-    #amount_entry.grid(column=0, row=4)
+    amount_label = Label(amount_frame, text="Enter amount: ")
+    amount_label.grid(column=0,row=0)
+    amount_entry = Entry(amount_frame) 
+    amount_entry.grid(column=1, row=0)
     
 
     def enter_data():
-        pass
 
-    #enter_data_button = Button(root, text="Enter the data",command=enter_data)
-    #enter_data_button.grid(column=2, row=4)
+        if (amount_entry.get() == "" or not amount_entry.get().isnumeric()):
+            root2 = Tk()
+            root2.geometry("{}x{}".format(int(root2.winfo_screenheight()*0.5), int(root2.winfo_screenheight()*0.5)))
+            
+            message_label = Label(root2, text="Enter proper data")
+            message_label.pack()
+            
+            root2.mainloop()
 
+
+        else:
+            global amount
+            amount = amount_entry.get()
+
+            root2 = Tk()
+            root2.geometry("{}x{}".format(int(root2.winfo_screenheight()), int(root2.winfo_screenheight()*0.5)))
+            root2.columnconfigure(0, weight=1)
+            root2.rowconfigure(0, weight=1)
+            root2.rowconfigure(1, weight=1)
+            root2.rowconfigure(2, weight=1)
+
+            description_label = Label(root2, text="Enter Description")
+            description_label.grid(column=0, row=0)
+
+            description_entry = Entry(root2, 
+                                    width=int(root2.winfo_screenheight()*0.1)
+                                    )
+            description_entry.grid(column=0, row=1)
+
+            def enter_button():
+                    global description
+                    if (description_entry.get() == ""):
+                        description = "None"
+                    else:
+                        description = description_entry.get()
+                    
+                    print(date, tag, amount)
+                        
+                
+            description_button = Button(root2, text="Enter", command=enter_button)
+            description_button.grid(column=0, row=2)
+
+
+
+            root2.mainloop()
+
+    enter_data_button = Button(enter_data_frame, text="Enter the data",command=enter_data)
+    enter_data_button.grid(column=2, row=4)
+
+
+    
 
     root.mainloop()
+
+
+
 
 
 
@@ -178,8 +250,8 @@ def sorting_page():
     order_clicked = StringVar()
     
     # initial menu text 
-    key_clicked.set(key_options[0])
-    order_clicked.set(order_options[0]) 
+    key_clicked.set("id")
+    order_clicked.set("Ascending") 
     
     # Create Dropdown menu 
     order_drop = OptionMenu(selection_frame , order_clicked, *order_options) 
@@ -288,7 +360,7 @@ def sorting_page():
     # Execute tkinter 
     root.mainloop()     
 
-#input_page(sample_dict, sample_tag)
-sorting_page()
+input_page(sample_dict, sample_tag)
+#sorting_page()
 
 

@@ -14,7 +14,7 @@ def setup_tags_file(tags_set):
 def get_main_tags_set():
     tags_file = open("budgeting_program/database/tags.txt", "r")
     tag_set = set(map(str, tags_file.read().strip().split()))
-    return tag_set
+    return list(tag_set)
 
 def main_dictionary():
     data = pd.read_excel('budgeting_program/database/sample_database.xlsx')
@@ -30,4 +30,4 @@ def dict_to_database():
     main_dict = main_dictionary()
     data = pd.DataFrame.from_dict(main_dict)
     data.to_excel("budgeting_program/database/expenses.xlsx", index=False)
-
+    
