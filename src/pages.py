@@ -278,9 +278,9 @@ def sorting_page():
     
     sorting_frame0.grid(column=0, row=1)
     sorting_frame0.columnconfigure(0, weight=1)
-    #for i in range(0, len(main_dict["id"])+1):
-        #sorting_frame0.rowconfigure(i, weight=1)
-    sorting_frame0.rowconfigure(0, weight=1)
+    for i in range(0, len(main_dict["id"])+1):
+        sorting_frame0.rowconfigure(i, weight=1)
+    
     
 
     dict_frame = dict()
