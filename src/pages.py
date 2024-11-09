@@ -24,7 +24,7 @@ def dashboard_page():
         pady=50, 
         padx=50, 
         text="Enter Data", 
-        command=lambda: [input_page(sample_dict, sample_tag)]
+        command=lambda: [root.destroy(), input_page(sample_dict, sample_tag)]
         )
     
     edit_button = Button(root, 
@@ -42,7 +42,8 @@ def dashboard_page():
     tabs_button = Button(root, 
         pady=50, 
         padx=50, 
-        text="See data as tabs"
+        text="See data as tabs",
+        command= lambda: [root.destroy(), sorting_page()]
         )
 
     dashboard_label.grid(row=0, column=2)
@@ -200,6 +201,7 @@ def input_page(main_dict, main_tag):
     
 
     root.mainloop()
+    dashboard_page()
 
 
 
@@ -358,9 +360,12 @@ def sorting_page():
 
 
     # Execute tkinter 
-    root.mainloop()     
+    root.mainloop()
+    dashboard_page()     
 
-input_page(sample_dict, sample_tag)
+
+#dashboard_page()
+#input_page(sample_dict, sample_tag)
 #sorting_page()
 
 
