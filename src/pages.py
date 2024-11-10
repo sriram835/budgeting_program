@@ -3,7 +3,12 @@ from tkcalendar import DateEntry
 import customtkinter
 from src.database_dictionary import *
 from src.sorting_dict import *
-import time
+from time import sleep
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.figure import Figure 
+
 
 sample_dict = {
     'id': [1,2,3],
@@ -15,77 +20,132 @@ sample_dict = {
 
 sample_tag = ["snacks","bills","subcriptions"]
 
+
+
+
+#Creating the dashboard page as a page to be called later in main.py
 def dashboard_page():
-    root = Tk()
-    root.geometry("{0}x{1}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    dashboard_label = Label(root, text = "Dashboard")
-    
-    input_button = Button(root, 
-        pady=50, 
-        padx=50, 
-        text="Enter Data", 
-        command=lambda: [root.destroy(), input_page(sample_dict, sample_tag)]
-        )
-    
-    edit_button = Button(root, 
-        pady=50, 
-        padx=50, 
-        text="Edit Data"
-        )
-    
-    graph_button = Button(root, 
-        pady=50, 
-        padx=50, 
-        text="See data as graphs"
-        )
-    
-    tabs_button = Button(root, 
-        pady=50, 
-        padx=50, 
-        text="See data as tabs",
-        command= lambda: [root.destroy(), sorting_page()]
-        )
+    #Creating the main window of dashboard page and setting its width and height to full screen
+    dash_root = Tk()
+    dash_root.config(bg="white")
+    dash_root.geometry("{0}x{1}".format(dash_root.winfo_screenwidth(), dash_root.winfo_screenheight()))
+    #setting 5 columns and 6 rows in dash root(main window)
+    dash_root.columnconfigure(0, weight=1)
+    dash_root.columnconfigure(1, weight=1)
+    dash_root.columnconfigure(2, weight=1)
+    dash_root.columnconfigure(3, weight=1)
+    dash_root.columnconfigure(4, weight=1)
+    dash_root.rowconfigure(0, weight=1)
+    dash_root.rowconfigure(1, weight=1)
+    dash_root.rowconfigure(2, weight=1)
+    dash_root.rowconfigure(3, weight=1)
+    dash_root.rowconfigure(4, weight=1)
+    dash_root.rowconfigure(5, weight=1)
 
+    #Creating a label in the dashboard page with text "dashboard" and setting its font and inserting it in row 0 and column 2
+    dashboard_label = Label(dash_root, 
+                            text = "Dashboard",
+                            font=("Arial bold", 26),
+                            bg="white"
+                            )
     dashboard_label.grid(row=0, column=2)
-    input_button.grid(row=1, column=1)
-    edit_button.grid(row=1, column=3)
-    graph_button.grid(row=2, column=1)
-    tabs_button.grid(row=2, column=3)
 
-    root.mainloop()
+    #Creating a button to open input page in the dashboard page with text "Enter Data" and inserting it in row 2 and column 1
+    input_button = Button(dash_root, 
+        width= int(dash_root.winfo_screenwidth()*0.015), 
+        height= int(dash_root.winfo_screenheight()*0.01),
+        font=("Arial",16),
+        fg="#2B332B",
+        bg="white",
+        borderwidth=3,
+        relief="raised",
+        text="Enter Data", 
+        command = lambda: [dash_root.destroy(), input_page(sample_dict, sample_tag)]
+        )
+    input_button.grid(row=2, column=1)
+
+    #Creating a button to open edit page in the dashboard page with text "Edit Data" and inserting it in row 2 and column 3
+    edit_button = Button(dash_root, 
+        width= int(dash_root.winfo_screenwidth()*0.015), 
+        height= int(dash_root.winfo_screenheight()*0.01),
+        font=("Arial",16),
+        fg="#2B332B",
+        bg="white",
+        borderwidth=3,
+        relief="raised", 
+        text="Edit Data",
+        command= lambda: [dash_root.destroy(), edit_page()]
+        )
+    edit_button.grid(row=2, column=3)
+
+    #Creating a button to open graph page in the dashboard page with text "See data as graphs" and inserting it in row 4 and column 1
+    graph_button = Button(dash_root, 
+        width= int(dash_root.winfo_screenwidth()*0.015), 
+        height= int(dash_root.winfo_screenheight()*0.01),
+        font=("Arial",16),
+        fg="#2B332B", 
+        bg="white",
+        borderwidth=3,
+        relief="raised",
+        text="See data as graphs",
+        command= lambda: [dash_root.destroy()]
+        )
+    graph_button.grid(row=4, column=1)
+
+    #Creating a button to open tabs page in the dashboard page with text "See data as tabs" and inserting it in row 4 and column 3
+    tabs_button = Button(dash_root, 
+        width= int(dash_root.winfo_screenwidth()*0.015), 
+        height= int(dash_root.winfo_screenheight()*0.01),
+        font=("Arial",16),
+        fg="#2B332B",
+        bg="white",
+        borderwidth=3,
+        relief="raised",
+        text="See data as tabs",
+        command= lambda: [dash_root.destroy(), sorting_page()]
+        )
+    tabs_button.grid(row=4, column=3)
+    
+    
+    
+    
+    
+    #Starting a loop to run the dash_root (main window)  
+    dash_root.mainloop()
 
 
 def input_page(main_dict, main_tag):
-    root = Tk()
-    root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    root.columnconfigure(0, weight=1)
-    root.rowconfigure(0, weight=1)
-    root.rowconfigure(1, weight=1)
-    root.rowconfigure(2, weight=1)
-    root.rowconfigure(3, weight=1)
-    root.rowconfigure(4, weight=1)
-    root.rowconfigure(5, weight=1)
+    
+    input_root = Tk()
+    input_root.geometry("{}x{}".format(input_root.winfo_screenwidth(), input_root.winfo_screenheight()))
+    input_root.columnconfigure(0, weight=1)
+    input_root.rowconfigure(0, weight=1)
+    input_root.rowconfigure(1, weight=1)
+    input_root.rowconfigure(2, weight=1)
+    input_root.rowconfigure(3, weight=1)
+    input_root.rowconfigure(4, weight=1)
+    input_root.rowconfigure(5, weight=1)
 
 
-    cal_frame = Frame(root)
+    cal_frame = Frame(input_root)
     cal_frame.grid(column=0, row=0)
     cal_frame.columnconfigure(0, weight=1)
     cal_frame.columnconfigure(1, weight=1)
     cal_frame.rowconfigure(0, weight=1)
     
-    tag_frame2 = Frame(root)
+    tag_frame2 = Frame(input_root)
     tag_frame2.grid(column=0, row=1)
 
-    tag_frame1 = Frame(root)
+    tag_frame1 = Frame(input_root)
     tag_frame1.grid(column=0, row=2)
 
-    amount_frame =Frame(root)
+    amount_frame =Frame(input_root)
     amount_frame.columnconfigure(0, weight=1)
     amount_frame.columnconfigure(1, weight=1)
     amount_frame.rowconfigure(0, weight=1)
     amount_frame.grid(column=0,row=3)
     
-    enter_data_frame = Frame(root)
+    enter_data_frame = Frame(input_root)
     enter_data_frame.grid(column=0, row=4)
 
     tag_button = dict()
@@ -184,7 +244,7 @@ def input_page(main_dict, main_tag):
                     else:
                         description = description_entry.get()
                     
-                    print(date, tag, amount)
+                    return date, tag, amount
                         
                 
             description_button = Button(root2, text="Enter", command=enter_button)
@@ -200,7 +260,7 @@ def input_page(main_dict, main_tag):
 
     
 
-    root.mainloop()
+    input_root.mainloop()
     dashboard_page()
 
 
@@ -210,14 +270,14 @@ def input_page(main_dict, main_tag):
 
 def sorting_page():
     #Creating the main window, setting its size and assigning each row and coloumn length
-    root = Tk()
-    root.geometry("{}x{}".format(root.winfo_screenwidth(), root.winfo_screenheight()))
-    root.columnconfigure(0, weight=1)
-    root.rowconfigure(0, weight=1)
-    root.rowconfigure(1, weight=1)
+    sort_root = Tk()
+    sort_root.geometry("{}x{}".format(sort_root.winfo_screenwidth(), sort_root.winfo_screenheight()))
+    sort_root.columnconfigure(0, weight=1)
+    sort_root.rowconfigure(0, weight=1)
+    sort_root.rowconfigure(1, weight=1)
     
     #Creating and configuring a frame separate for selecting key in dictionary to sort by
-    selection_frame = Frame(root)
+    selection_frame = Frame(sort_root)
     selection_frame.grid(column=0, row=0)
     selection_frame.columnconfigure(0, weight=1)
     selection_frame.columnconfigure(1, weight=1)
@@ -269,10 +329,10 @@ def sorting_page():
 
 
     #Creating and configuring a frame separate for displaying sorted dictionary
-    sorting_frame0 = customtkinter.CTkScrollableFrame(root,
+    sorting_frame0 = customtkinter.CTkScrollableFrame(sort_root,
                                                      orientation="vertical", 
-                                                     width=root.winfo_screenwidth()*0.95,
-                                                     height=root.winfo_screenheight()*0.80,
+                                                     width=sort_root.winfo_screenwidth()*0.95,
+                                                     height=sort_root.winfo_screenheight()*0.80,
                                                      fg_color="white"
                                                      )
     
@@ -297,13 +357,14 @@ def sorting_page():
         dict_frame[index].rowconfigure(0, weight=1)
 
         def display_description(index = index):
-            root = Tk()
-            root.geometry("{}x{}".format(root.winfo_screenheight(), root.winfo_screenheight()))
-            description_label = Label(root, text=main_dict["description"][index])
+            sort_root = Tk()
+            sort_root.geometry("{}x{}".format(sort_root.winfo_screenheight(), sort_root.winfo_screenheight()))
+            description_label = Label(sort_root, text=main_dict["description"][index])
             description_label.pack()
-            root.mainloop()
+            sort_root.mainloop()
+            sorting_page()
         
-        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: display_description(index), width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [sort_root.destroy(),display_description(index)], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
         full_data_button[index].grid(column=0, row=0)
 
         id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
@@ -360,12 +421,147 @@ def sorting_page():
 
 
     # Execute tkinter 
-    root.mainloop()
+    sort_root.mainloop()
     dashboard_page()     
 
 
-#dashboard_page()
+
+
+
+def edit_page():
+    edit_root = Tk()
+    edit_root.geometry("{}x{}".format(edit_root.winfo_screenwidth(), edit_root.winfo_screenheight()))
+    edit_root.columnconfigure(0, weight=1)
+    edit_root.rowconfigure(0, weight=1)
+
+    main_dict = main_dictionary()
+
+    edit_frame = customtkinter.CTkScrollableFrame(edit_root,
+                                                     orientation="vertical", 
+                                                     width=edit_root.winfo_screenwidth()*0.95,
+                                                     height=edit_root.winfo_screenheight()*0.80,
+                                                     fg_color="white"
+                                                     )
+    edit_frame.grid(column=0, row=0)
+    edit_frame.columnconfigure(0, weight=1)
+    for i in range(0, len(main_dict["id"])+1):
+        edit_frame.rowconfigure(i, weight=1)
+    
+    
+
+    dict_frame = dict()
+    full_data_button = dict()
+    def dict_item(index):
+
+        dict_frame[index] = Frame(edit_frame, width=edit_frame.winfo_screenwidth())
+        dict_frame[index].grid(column=0,row=index+1)
+        dict_frame[index].columnconfigure(0, weight=1)
+        dict_frame[index].columnconfigure(1, weight=1)
+        dict_frame[index].columnconfigure(2, weight=1)
+        dict_frame[index].columnconfigure(3, weight=1)
+        dict_frame[index].columnconfigure(4, weight=1)
+        dict_frame[index].rowconfigure(0, weight=1)
+
+        def edit_command(index = index):
+            print(index)
+            input_page(sample_dict, sample_tag)
+
+        
+        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(index)], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        full_data_button[index].grid(column=0, row=0)
+
+        id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        id_label.grid(column=1, row=0)
+
+        date = str(main_dict['date'][index])
+        day = date[4:6]
+        month = date[2:4]
+        year = date[0:2]
+        date_label = Label(dict_frame[index], text=f"{day}/{month}/{year}", width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        date_label.grid(column=2,row=0)
+
+        tag_label = Label(dict_frame[index], text=main_dict["tag"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        tag_label.grid(column=3,row=0)
+
+        amount_label = Label(dict_frame[index], text=main_dict["amount"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        amount_label.grid(column=4,row=0)
+
+
+
+    
+    dict_frame0 = Frame(edit_frame)
+
+    dict_frame0.grid(column=0,row=0)
+    dict_frame0.columnconfigure(0, weight=1)
+    dict_frame0.columnconfigure(1, weight=1)
+    dict_frame0.columnconfigure(2, weight=1)
+    dict_frame0.columnconfigure(3, weight=1)
+    dict_frame0.columnconfigure(4, weight=1)
+    dict_frame0.rowconfigure(0, weight=1)
+    full_data_button0 = Button(dict_frame0, text=">", width=int(dict_frame0.winfo_screenwidth()*0.2))
+    full_data_button0.grid(column=0, row=0)
+
+    id_label0 = Label(dict_frame0, text="id",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    id_label0.grid(column=1, row=0)
+
+    date_label0 = Label(dict_frame0, text="date",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    date_label0.grid(column=2,row=0)
+
+    tag_label0 = Label(dict_frame0, text="tags",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    tag_label0.grid(column=3,row=0)
+
+    amount_label0 = Label(dict_frame0, text="amount",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    amount_label0.grid(column=4,row=0)
+    
+    for i in range(0, len(main_dict["id"])):
+        dict_item(i)
+
+    # Execute tkinter 
+    edit_root.mainloop()
+
+
+def graph_page():
+    graph_root = Tk()
+    graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
+    graph_root.columnconfigure(0, weight=1)
+    graph_root.rowconfigure(0, weight=1)
+    graph_root.rowconfigure(1, weight=1)
+    graph_root.rowconfigure(2, weight=1)
+
+
+
+    graph_main_label = Label(graph_root, text="Graph Page")
+    graph_main_label.grid(column=0, row=0)
+
+    
+    graph_frame1 = Frame(graph_root)
+    graph_frame1.grid(column=0, row=1)
+        
+    fig = Figure()
+    
+    xpoints = np.array([1, 8])
+    ypoints = np.array([3, 10])
+
+    plot1 = fig.add_subplot(111) 
+    
+    plot1.plot(xpoints, ypoints)
+    
+
+    canvas = FigureCanvasTkAgg(fig, master=graph_frame1)
+    
+    canvas.draw()
+
+    toolbar = NavigationToolbar2Tk(canvas, graph_frame1)
+    toolbar.update()
+
+    canvas.get_tk_widget().pack()
+
+    graph_root.mainloop()
+
+
+dashboard_page()
 #input_page(sample_dict, sample_tag)
 #sorting_page()
-
+#edit_page()
+#graph_page()
 

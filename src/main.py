@@ -1,4 +1,3 @@
-from tkinter import *
 from src.pages import *
 #from src.src_sorting import Sort
 from src.database_dictionary import *
