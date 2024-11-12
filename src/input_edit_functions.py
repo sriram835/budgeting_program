@@ -35,7 +35,7 @@ class Budget:
         for entry_id, details in self.entries.items():
             print(f"ID: {entry_id}, Details: {details}")
 
-def main(date, tag, amount, description, choice, main_dict):
+def main(date, tag, amount, description, choice, main_dict, id):
     budget = Budget()
     
     

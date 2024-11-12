@@ -75,7 +75,7 @@ def dashboard_page():
         borderwidth=3,
         relief="raised", 
         text="Edit Data",
-        command= lambda: [dash_root.destroy(), edit_page()]
+        command= lambda: [dash_root.destroy(), edit_page(sample_dict)]
         )
     edit_button.grid(row=2, column=3)
 
@@ -115,7 +115,7 @@ def dashboard_page():
     dash_root.mainloop()
 
 
-def input_page(main_dict, main_tag):
+def input_page(main_dict, main_tag, index=0, is_edit=False):
     
     input_root = Tk()
     input_root.geometry("{}x{}".format(input_root.winfo_screenwidth(), input_root.winfo_screenheight()))
@@ -243,8 +243,11 @@ def input_page(main_dict, main_tag):
                     else:
                         description = description_entry.get()
                     
-                    main(date, tag, amount, description, '1', main_dict)
-                    print(tag)
+                    if (is_edit == True):
+                        main(date, tag, amount, description, '2', main_dict, index)
+                    else:
+                        main(date, tag, amount, description, '1', main_dict)
+                    
 
                         
                 
@@ -429,13 +432,12 @@ def sorting_page():
 
 
 
-def edit_page():
+def edit_page(main_dict):
     edit_root = Tk()
     edit_root.geometry("{}x{}".format(edit_root.winfo_screenwidth(), edit_root.winfo_screenheight()))
     edit_root.columnconfigure(0, weight=1)
     edit_root.rowconfigure(0, weight=1)
 
-    main_dict = main_dictionary()
 
     edit_frame = customtkinter.CTkScrollableFrame(edit_root,
                                                      orientation="vertical", 
@@ -464,9 +466,8 @@ def edit_page():
         dict_frame[index].rowconfigure(0, weight=1)
 
         def edit_command(index = index):
-            print(index)
-            input_page(sample_dict, sample_tag)
-
+            input_page(sample_dict, sample_tag, index=index, is_edit=True)
+            pass
         
         full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(index)], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
         full_data_button[index].grid(column=0, row=0)
@@ -561,7 +562,7 @@ def graph_page():
 
 
 #dashboard_page()
-input_page(sample_dict, sample_tag)
+#input_page(sample_dict, sample_tag)
 #sorting_page()
 #edit_page()
 #graph_page()
