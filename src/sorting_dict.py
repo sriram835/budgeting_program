@@ -25,6 +25,6 @@ class Sort():
                 self.dictionary[keys][i],self.dictionary[keys][max_index]=self.dictionary[keys][max_index],self.dictionary[keys][i]
 
 #HOW TO MAKE IT WORK
-#import src_sorting
-#<variable>=src_sorting.Sort(<dictionary you want to sort>)
+#import sorting_dict
+#<variable>=sorting_dict.Sort(<dictionary you want to sort>)
 #<variable>.<function>(<column_name_to_be_sorted>)
