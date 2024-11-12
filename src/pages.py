@@ -3,6 +3,7 @@ from tkcalendar import DateEntry
 import customtkinter
 from src.database_dictionary import *
 from src.sorting_dict import *
+from src.input_edit_functions import *
 from time import sleep
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import matplotlib.pyplot as plt
@@ -186,9 +187,7 @@ def input_page(main_dict, main_tag):
     tag_selection.grid(column=1, row=0)
 
     
-    tag = main_tag[0]
-    
-    tag_updation(tag)
+    tag_updation(main_tag[0])
 
 
     for i in range(len(main_tag)):
@@ -244,7 +243,9 @@ def input_page(main_dict, main_tag):
                     else:
                         description = description_entry.get()
                     
-                    return date, tag, amount
+                    main(date, tag, amount, description, '1', main_dict)
+                    print(tag)
+
                         
                 
             description_button = Button(root2, text="Enter", command=enter_button)
@@ -254,7 +255,7 @@ def input_page(main_dict, main_tag):
 
             root2.mainloop()
 
-    enter_data_button = Button(enter_data_frame, text="Enter the data",command=enter_data)
+    enter_data_button = Button(enter_data_frame, text="Enter the data",command= lambda: [enter_data(),print(tag)])
     enter_data_button.grid(column=2, row=4)
 
 
@@ -559,8 +560,8 @@ def graph_page():
     graph_root.mainloop()
 
 
-dashboard_page()
-#input_page(sample_dict, sample_tag)
+#dashboard_page()
+input_page(sample_dict, sample_tag)
 #sorting_page()
 #edit_page()
 #graph_page()
