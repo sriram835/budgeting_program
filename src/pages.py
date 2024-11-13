@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 #Importing other pages in src folder
 from src.database_dictionary import *
 from src.sorting_dict import *
-from src.input_edit_functions import *
+from src.input_edit_functions import main
 from src.graph_function import *
 
 # Sample data for demonstration purposes
@@ -46,7 +46,8 @@ def dashboard_page():
     dashboard_label = Label(dash_root, 
                             text = "Dashboard",
                             font=("Arial bold", 26),
-                            bg="white"
+                            bg="#e0f7fa",
+                            fg="#00796b"
                             )
     dashboard_label.grid(row=0, column=2)
 
@@ -55,11 +56,13 @@ def dashboard_page():
         width= int(dash_root.winfo_screenwidth()*0.015), 
         height= int(dash_root.winfo_screenheight()*0.01),
         font=("Arial",16),
-        fg="#2B332B",
-        bg="white",
+        fg="white",
+        bg="#00796b",
         borderwidth=3,
         relief="raised",
-        text="Enter Data", 
+        text="Enter Data",
+        padx = 10,
+        pady = 10,
         command = lambda: [dash_root.destroy(), input_page(main_dictionary(), get_main_tags_set())]
         )
     input_button.grid(row=2, column=1)
@@ -69,11 +72,14 @@ def dashboard_page():
         width= int(dash_root.winfo_screenwidth()*0.015), 
         height= int(dash_root.winfo_screenheight()*0.01),
         font=("Arial",16),
-        fg="#2B332B",
-        bg="white",
+        fg="white",
+        bg="#00796b",
+        activebackground="#005f4f",
         borderwidth=3,
         relief="raised", 
         text="Edit Data",
+        padx = 10,
+        pady = 10,
         command= lambda: [dash_root.destroy(), edit_page(main_dictionary())]
         )
     edit_button.grid(row=2, column=3)
@@ -83,12 +89,14 @@ def dashboard_page():
         width= int(dash_root.winfo_screenwidth()*0.015), 
         height= int(dash_root.winfo_screenheight()*0.01),
         font=("Arial",16),
-        fg="#2B332B", 
-        bg="white",
+        fg="white",
+        bg="#00796b",
+        activebackground="#005f4f",        
         borderwidth=3,
         relief="raised",
         text="See data as graphs",
-        command= lambda: [dash_root.destroy(), graph_page()]
+        padx = 10,
+        pady = 10,        command= lambda: [dash_root.destroy(), graph_page()]
         )
     graph_button.grid(row=4, column=1)
 
@@ -97,11 +105,14 @@ def dashboard_page():
         width= int(dash_root.winfo_screenwidth()*0.015), 
         height= int(dash_root.winfo_screenheight()*0.01),
         font=("Arial",16),
-        fg="#2B332B",
-        bg="white",
+        fg="white",
+        bg="#00796b",
+        activebackground="#005f4f",    
         borderwidth=3,
         relief="raised",
         text="See data as tabs",
+        padx = 10,
+        pady = 10,
         command= lambda: [dash_root.destroy(), sorting_page()]
         )
     tabs_button.grid(row=4, column=3)
@@ -111,11 +122,14 @@ def dashboard_page():
         width= int(dash_root.winfo_screenwidth()*0.015), 
         height= int(dash_root.winfo_screenheight()*0.01),
         font=("Arial",16),
-        fg="#2B332B",
-        bg="white",
+        fg="white",
+        bg="#00796b",
+        activebackground="#005f4f",    
         borderwidth=3,
         relief="raised",
         text="Change tags", 
+        padx = 10,
+        pady = 10, 
         command = lambda: [dash_root.destroy(), change_tags_page()]
         )
     change_tag_button.grid(row=6, column=2)
@@ -132,36 +146,39 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
     input_root = Tk()
     input_root.geometry("{}x{}".format(input_root.winfo_screenwidth(), 
                                        input_root.winfo_screenheight()))
-    
+    input_root.config(bg="#e0f7fa")  # Light cyan background
+
     # Configure column and row weights
     input_root.columnconfigure(0, weight=1)
     for i in range(0, 6):
         input_root.rowconfigure(i, weight=1)
 
     # Frame for Date Entry
-    cal_frame = Frame(input_root)
+    cal_frame = Frame(input_root, bg="#e0f7fa")
     cal_frame.grid(column=0, row=0)
     cal_frame.columnconfigure(0, weight=1)
     cal_frame.columnconfigure(1, weight=1)
     cal_frame.rowconfigure(0, weight=1)
     
     # Frame for tag selection buttons
-    tag_frame2 = Frame(input_root)
+    tag_frame2 = Frame(input_root, bg="#e0f7fa")
     tag_frame2.grid(column=0, row=1)
 
     # Frame for displaying the selected tag
-    tag_frame1 = Frame(input_root)
+    tag_frame1 = Frame(input_root, bg="#e0f7fa")
     tag_frame1.grid(column=0, row=2)
 
     # Frame for entering amount
-    amount_frame =Frame(input_root)
+    amount_frame =Frame(input_root, 
+                        bg="#e0f7fa")
     amount_frame.columnconfigure(0, weight=1)
     amount_frame.columnconfigure(1, weight=1)
     amount_frame.rowconfigure(0, weight=1)
     amount_frame.grid(column=0,row=3)
     
     # Frame for data entry button 
-    enter_data_frame = Frame(input_root)
+    enter_data_frame = Frame(input_root, 
+                            bg="#e0f7fa")
     enter_data_frame.grid(column=0, row=4)
 
     # Dictionary to store tag buttons
@@ -177,7 +194,9 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
     cal.grid(row=0,column=1)
 
     # Label for date entry
-    cal_label = Label(cal_frame, text="Enter date")
+    cal_label = Label(cal_frame, 
+                      text="Enter date",
+                      font=("Arial bold", 15))
     cal_label.grid(column=0, row=0)
 
     # Function to update the selected tag display
@@ -194,14 +213,23 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
     
     
     # Labels for tag selection
-    tag_label = Label(tag_frame2, text="Select the tag")
+    tag_label = Label(tag_frame2, 
+                      text="Select the tag",
+                      font=("Arial bold", 15)
+                      )
     tag_label.grid(column=0, row=0)
 
-    tag_label_selected = Label(tag_frame1, text="Selected tag:")
+    tag_label_selected = Label(tag_frame1, 
+                               text="Selected tag:",
+                               font=("Arial bold", 15)
+                               )
     tag_label_selected.grid(column=0, row=0)
 
     # Entry to display the selected tag
-    tag_selection = Entry(tag_frame1, state=DISABLED)
+    tag_selection = Entry(tag_frame1, 
+                          state=DISABLED,
+                          font=("Arial bold", 15)
+                          )
     tag_selection.grid(column=1, row=0)
 
     # Initialize with the first tag in the list
@@ -212,16 +240,22 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
         def action(x = main_tag[i]):
             return tag_updation(x)
         
-        tag_button[main_tag[i]] = Button(tag_frame2, 
+        tag_button[main_tag[i]] = Button(tag_frame2,
+                                         font=("Arial bold", 15), 
                                          text=main_tag[i], 
                                          command=action)
         tag_button[main_tag[i]].grid(column=i,row=1)
 
 
     # Label and Entry for amount input
-    amount_label = Label(amount_frame, text="Enter amount: ")
+    amount_label = Label(amount_frame, 
+                         text="Enter amount: ",
+                         font=("Arial bold", 15)
+                         )
     amount_label.grid(column=0,row=0)
-    amount_entry = Entry(amount_frame) 
+    amount_entry = Entry(amount_frame,
+                         font=("Arial bold", 15)
+                         ) 
     amount_entry.grid(column=1, row=0)
     
     # Function to check if data is valid and excute description function afterwards
@@ -232,7 +266,9 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
             root2.geometry("{}x{}".format(int(root2.winfo_screenheight()*0.5), 
                                           int(root2.winfo_screenheight()*0.5)))
             
-            message_label = Label(root2, text="Enter proper data")
+            message_label = Label(root2, 
+                                  text="Enter proper data",
+                                  font=("Arial bold", 15))
             message_label.pack()
             
             root2.mainloop()
@@ -252,11 +288,15 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
             root2.rowconfigure(1, weight=1)
             root2.rowconfigure(2, weight=1)
 
-            description_label = Label(root2, text="Enter Description")
+            description_label = Label(root2, 
+                                      text="Enter Description",
+                                      font=("Arial bold", 15)
+                                      )
             description_label.grid(column=0, row=0)
 
             description_entry = Entry(root2, 
-                                    width=int(root2.winfo_screenheight()*0.1)
+                                    width=int(root2.winfo_screenheight()*0.1),
+                                    font=("Arial bold", 15)
                                     )
             description_entry.grid(column=0, row=1)
 
@@ -289,7 +329,11 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
 
                         
             # Button to store the description entry    
-            description_button = Button(root2, text="Enter", command=enter_button)
+            description_button = Button(root2, 
+                                        text="Enter", 
+                                        command=enter_button,
+                                        font=("Arial bold", 15)
+                                        )
             description_button.grid(column=0, row=2)
 
 
@@ -297,7 +341,11 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
             root2.mainloop()
 
     # Button to store data, and start decription window
-    enter_data_button = Button(enter_data_frame, text="Enter the data",command= lambda: [enter_data(),print(tag)])
+    enter_data_button = Button(enter_data_frame, 
+                               text="Enter the data",
+                               command= lambda: [enter_data()],
+                               font=("Arial bold", 15)
+                               )
     enter_data_button.grid(column=2, row=4)
 
 
