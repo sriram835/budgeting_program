@@ -1,28 +1,38 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-d = {'id':[1,2,3], 'date':[241101, 241102, 241003,241005], 'tag':['snacks','electricity bill','snacks','books'],'amount': [500,1000,50,100], 'description':['chips','bill','noodles','books']}
+from src.database_dictionary import main_dictionary 
 
+d = {'id':[1,2,3,4], 'date':[241101, 241102, 241003,241105], 'tag':['snacks','electricity bill','snacks','books'],'amount': [500,1000,50,100], 'description':['chips','bill','noodles','books']}
+main_dict1 = main_dictionary().copy()
+print(main_dict1)
 
 def pie_individual_tag(main_dict, year_input, month_input):
     tags_list= list()
     amount_list = list()
-    for i in main_dict['date']:
-        if str(i)[0:2] == year_input :
-            if str(i)[2:4] == month_input:
-                l1 = main_dict['tag']
-                l2 = main_dict['amount']
-                if l1[main_dict['date'].index(i)] not in tags_list:
-                    tags_list.append(l1[main_dict['date'].index(i)])
-                    amount_list.append( l2[main_dict['date'].index(i)])
-                else:
-                    amount_list[tags_list.index(l1[main_dict['date'].index(i)])] +=  l2[main_dict['date'].index(i)]
+    tag_set = set(main_dict['tag'])
+    for tag in tag_set:
+        current_sum = 0
+        for i in main_dict['id']:
+            index = main_dict['id'].index(i)
+            date = str(main_dict['date'][index])
+            if (date[0:2] == year_input and date[2:4] == month_input and main_dict['tag'][index] == tag):    
+                current_sum += main_dict['amount'][index]
+        tags_list.append(tag)
+        amount_list.append(current_sum)
+                    
+            
+    print(amount_list, tags_list)
     amount = np.array(amount_list)
     tags = np.array(tags_list)
-    # plt.figure(figsize=(8,5))
-    
+
+    plt.pie(amount, labels=tags)
+    plt.show()
     data = [amount, tags]
     return data
+
+#print(main_dictionary())
+pie_individual_tag(main_dict1, '24','11')
 
 
 def bar_total(main_dict, year):

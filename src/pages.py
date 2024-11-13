@@ -618,7 +618,7 @@ def edit_page(main_dict):
 
 
 def graph_page():
-    main_dict = main_dictionary()
+    main_dict = main_dictionary().copy()
     graph_root = Tk()
     graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
     graph_root.columnconfigure(0, weight=1)
@@ -645,34 +645,34 @@ def graph_page():
     graph_frame1 = Frame(graph_root)
     graph_frame1.grid(column=0, row=2)
     
-    graph_selected = "bar"
-    year_selected = "24"
+    graph_selected = 'pie'
+    year_selected = '24'
     month_selected = '11'
     # Change the selected sorting 
     def change_graph(graph_selected, year_selected): 
-        
-
         graph_selected = graph_clicked.get()
         year_selected = year_clicked.get()
-        
+        month_selected = month_clicked.get()
+
+
         fig = Figure()
-    
-    
+
         plot1 = fig.add_subplot(111)
         
-        canvas = FigureCanvasTkAgg(fig, master=graph_frame1)
-
 
         if (graph_selected == 'pie chart'):
+            print(main_dict)
             amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
             plot1.pie(amount, labels=tag, autopct='%1.1f%%')
 
 
         elif (graph_selected == 'bar chart'):
             data1, data2 = bar_total(main_dict, year_selected)
+            
             plot1.bar(data1, data2)
             
-         
+
+        canvas = FigureCanvasTkAgg(fig, master=graph_frame1) 
         canvas.get_tk_widget().grid(column=0,row=0)
 
 
