@@ -26,13 +26,11 @@ def pie_individual_tag(main_dict, year_input, month_input):
     amount = np.array(amount_list)
     tags = np.array(tags_list)
 
-    plt.pie(amount, labels=tags)
-    plt.show()
+
     data = [amount, tags]
     return data
 
-#print(main_dictionary())
-pie_individual_tag(main_dict1, '24','11')
+
 
 
 def bar_total(main_dict, year):

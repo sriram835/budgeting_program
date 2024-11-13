@@ -640,8 +640,6 @@ def graph_page():
     selection_frame.columnconfigure(2, weight=1)
     selection_frame.rowconfigure(0, weight=1)
 
-
-    
     graph_frame1 = Frame(graph_root)
     graph_frame1.grid(column=0, row=2)
     
@@ -684,7 +682,6 @@ def graph_page():
         year_set.add(date[0:2])
 
     # Dropdown menu options 
-    
     graph_options = ["bar chart", 'pie chart']
     year_options = year_set
     month_options=month_set
