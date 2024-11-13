@@ -11,15 +11,13 @@ class Budget:
 
         entry_id = max(main_dict['id'])
         self.entries[entry_id] = entry
-        print(f"Entry added with ID: {entry_id}")
-        print(f"Details: {self.entries[entry_id]}")
         for key in main_dict.keys():
             if (key == 'id'):
                 main_dict[key].append(entry_id + 1)
             else:
                 main_dict[key].append(self.entries[entry_id][key])
         dict_to_database(main_dict)
-        print("Done")
+    
 
 
     def edit_entry(self, entry_id, updated_entry):

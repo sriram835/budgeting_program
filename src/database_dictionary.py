@@ -30,3 +30,4 @@ def dict_to_database(main_dict):
     data = pd.DataFrame.from_dict(main_dict)
     data.to_excel("budgeting_program/database/sample_database.xlsx", index=False)
     
+

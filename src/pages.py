@@ -1,20 +1,24 @@
 from tkinter import *
 from tkcalendar import DateEntry
 import customtkinter
-from src.database_dictionary import *
-from src.sorting_dict import *
-from src.input_edit_functions import *
 from time import sleep
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.figure import Figure 
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt 
+
+#Importing other pages in src folder
+from src.database_dictionary import *
+from src.sorting_dict import *
+from src.input_edit_functions import *
+from src.graph_function import *
 
 
 sample_dict = {
     'id': [1,2,3],
     'date': [241101,241102,241103],
-    'tag': ['snaks','electricity bill','snacks'],
+    'tag': ['snacks','electricity bill','snacks'],
     'amount': [250,1000,50],
     'description': ['chips', 'bill', 'noodles']
 }
@@ -89,7 +93,7 @@ def dashboard_page():
         borderwidth=3,
         relief="raised",
         text="See data as graphs",
-        command= lambda: [dash_root.destroy()]
+        command= lambda: [dash_root.destroy(), graph_page()]
         )
     graph_button.grid(row=4, column=1)
 
@@ -158,14 +162,6 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
 
     cal_label = Label(cal_frame, text="Enter date")
     cal_label.grid(column=0, row=0)
-
-    uncut_date = str(cal.get_date())
-    uncut_date = uncut_date.split("-")
-    year = int(uncut_date[0][2:4])
-    month = int(uncut_date[1])
-    day = int(uncut_date[2])
-
-    date = year*10000 + month*100 + day
 
     def tag_updation(new_tag):
         global tag
@@ -238,6 +234,14 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
 
             def enter_button():
                     global description
+                    uncut_date = str(cal.get_date())
+                    uncut_date = uncut_date.split("-")
+                    year = int(uncut_date[0][2:4])
+                    month = int(uncut_date[1])
+                    day = int(uncut_date[2])
+
+                    date = year*10000 + month*100 + day
+
                     if (description_entry.get() == ""):
                         description = "None"
                     else:
@@ -246,7 +250,7 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
                     if (is_edit == True):
                         main(date, tag, amount, description, '2', main_dict, index)
                     else:
-                        main(date, tag, amount, description, '1', main_dict)
+                        main(date, tag, amount, description, '1', main_dict, 0)
                     
 
                         
@@ -523,6 +527,7 @@ def edit_page(main_dict):
 
 
 def graph_page():
+    main_dict = main_dictionary()
     graph_root = Tk()
     graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
     graph_root.columnconfigure(0, weight=1)
@@ -531,38 +536,99 @@ def graph_page():
     graph_root.rowconfigure(2, weight=1)
 
 
-
+    #Creating the graph label
     graph_main_label = Label(graph_root, text="Graph Page")
     graph_main_label.grid(column=0, row=0)
 
+    #Creating and configuring a frame separate for selecting key in dictionary to sort by
+    selection_frame = Frame(graph_root)
+    selection_frame.grid(column=0, row=1)
+    selection_frame.columnconfigure(0, weight=1)
+    selection_frame.columnconfigure(1, weight=1)
+    selection_frame.columnconfigure(2, weight=1)
+    selection_frame.columnconfigure(2, weight=1)
+    selection_frame.rowconfigure(0, weight=1)
+
+
     
     graph_frame1 = Frame(graph_root)
-    graph_frame1.grid(column=0, row=1)
+    graph_frame1.grid(column=0, row=2)
+    
+    graph_selected = "bar"
+    year_selected = "24"
+    month_selected = '11'
+    # Change the selected sorting 
+    def change_graph(graph_selected, year_selected): 
         
-    fig = Figure()
-    
-    xpoints = np.array([1, 8])
-    ypoints = np.array([3, 10])
 
-    plot1 = fig.add_subplot(111) 
+        graph_selected = graph_clicked.get()
+        year_selected = year_clicked.get()
+        
+        fig = Figure()
     
-    plot1.plot(xpoints, ypoints)
     
+        plot1 = fig.add_subplot(111)
+        
+        canvas = FigureCanvasTkAgg(fig, master=graph_frame1)
 
-    canvas = FigureCanvasTkAgg(fig, master=graph_frame1)
+
+        if (graph_selected == 'pie chart'):
+            amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
+            plot1.pie(amount, labels=tag, autopct='%1.1f%%')
+
+
+        elif (graph_selected == 'bar chart'):
+            data1, data2 = bar_total(main_dict, year_selected)
+            plot1.bar(data1, data2)
+            
+         
+        canvas.get_tk_widget().grid(column=0,row=0)
+
+
+    year_set = set()
+    month_set = set()
+    for index in range(0, len(main_dict['date'])): 
+        date = str(main_dict['date'][index])
+        month_set.add(date[2:4])
+        year_set.add(date[0:2])
+
+    # Dropdown menu options 
     
-    canvas.draw()
+    graph_options = ["bar chart", 'pie chart']
+    year_options = year_set
+    month_options=month_set
 
-    toolbar = NavigationToolbar2Tk(canvas, graph_frame1)
-    toolbar.update()
+    # datatype of menu text 
+    graph_clicked = StringVar() 
+    year_clicked = StringVar()
+    month_clicked = StringVar()
+    
+    # initial menu text 
+    graph_clicked.set("bar chart")
+    year_clicked.set(list(year_set)[0])
+    month_clicked.set(list(month_set)[0]) 
+    
+    # Create Dropdown menu 
+    year_drop = OptionMenu(selection_frame , year_clicked, *year_options) 
+    graph_drop = OptionMenu(selection_frame , graph_clicked, *graph_options)
+    month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
+    
+    # Create button, it start the sorting 
+    button = Button( selection_frame , text = "change" , command = lambda: change_graph(graph_selected, year_selected) )
+    
+    #Assigning grid placement to each element
+    graph_drop.grid(column=0, row=0)
+    year_drop.grid(column=1, row=0)
+    month_drop.grid(column=2,row=0)
+    button.grid(column=3, row=0)
 
-    canvas.get_tk_widget().pack()
+        
 
     graph_root.mainloop()
 
 
 #dashboard_page()
-#input_page(sample_dict, sample_tag)
+input_page(main_dictionary(), get_main_tags_set())
 #sorting_page()
 #edit_page()
 #graph_page()
