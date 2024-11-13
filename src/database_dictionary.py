@@ -1,16 +1,24 @@
+#Importing pandas
 import pandas as pd
 
-sample_tag_set = {"snacks", "bills", "subscription"}
-
-
-def setup_tags_file(tags_set):
+#Creating a function that can add tags or reset tags in tags.txt
+def setup_tags_file(tags_set, is_reset = False):
     total_tag = ""
-    tags_file = open("budgeting_program/database/tags.txt", "w")
+    
+    if (is_reset == True):
+        tags_file = open("budgeting_program/database/tags.txt", "w")
+    else:
+        tags_file = open("budgeting_program/database/tags.txt", "a")
+    
+    
     for i in tags_set:
         total_tag = f"{total_tag} {i}" 
+    
+
     tags_file.write(total_tag)
     tags_file.close()
 
+#Creating a fuction that 
 def get_main_tags_set():
     tags_file = open("budgeting_program/database/tags.txt", "r")
     tag_set = set(map(str, tags_file.read().strip().split()))

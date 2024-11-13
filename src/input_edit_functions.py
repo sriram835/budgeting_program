@@ -20,20 +20,23 @@ class Budget:
     
 
 
-    def edit_entry(self, entry_id, updated_entry):
-        if entry_id in self.entries:
-            self.entries[entry_id].update(updated_entry)
-            print(f"Entry with ID: {entry_id} has been updated.")
-            print(f"Updated Details: {self.entries[entry_id]}")
-        else:
-            print(f"No entry found with ID: {entry_id}")
+    def edit_entry(self, entry_id, updated_entry, main_dict):
+        index = main_dict['id'].index(entry_id)
+    
+        for key in main_dict.keys():
+            main_dict[key][index] = updated_entry[key]     
+    
+        dict_to_database(main_dict)
+
 
     def get_entries(self):
         print("\n--- Budget Entries ---")
         for entry_id, details in self.entries.items():
             print(f"ID: {entry_id}, Details: {details}")
 
-def main(date, tag, amount, description, choice, main_dict, id):
+
+
+def main(date, tag, amount, description, choice, main_dict, entry_id):
     budget = Budget()
     
     
@@ -48,26 +51,22 @@ def main(date, tag, amount, description, choice, main_dict, id):
         budget.add_entry(entry, main_dict)
     
     elif choice == '2':
-        entry_id = int(input("Enter the ID of the entry to edit: "))
-        if entry_id in budget.entries:
+        if entry_id in main_dict['id']:
             updated_entry = {}
-            print("Leave a field blank to keep the current value.")
-            date = input("Enter new date (YYYY-MM-DD): ")
-            if date:
-                updated_entry['date'] = date
-            
-            tag = input("Enter new tag: ")
-            if tag:
-                updated_entry['tag'] = tag
-            
-            amount = input("Enter new amount: ")
-            if amount:
-                updated_entry['amount'] = amount
-            
-            description = input("Enter new description: ")
-            if description:
-                updated_entry['description'] = description
 
+            updated_entry['id'] = entry_id
+
+            updated_entry['date'] = date
+        
+            updated_entry['tag'] = tag
+            
+            
+            updated_entry['amount'] = amount
+            
+        
+            updated_entry['description'] = description
+
+            """
             while True:
                 additional_key = input("Enter additional key to update (or 'done' to finish): ")
                 if additional_key.lower() == 'done':
@@ -76,8 +75,11 @@ def main(date, tag, amount, description, choice, main_dict, id):
                 if additional_value.lower() == 'null':
                     additional_value = None
                 updated_entry[additional_key] = additional_value
-            
-            budget.edit_entry(entry_id, updated_entry)
+            """
+  
+            budget.edit_entry(entry_id, updated_entry, main_dict)
+
+        
         else:
             print(f"No entry found with ID: {entry_id}")
     
@@ -89,6 +91,7 @@ def main(date, tag, amount, description, choice, main_dict, id):
     
     else:
         print("Invalid option. Please try again.")
+
 
 if __name__ == "__main__":
     main()

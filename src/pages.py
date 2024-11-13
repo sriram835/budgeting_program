@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 #Importing other pages in src folder
 from src.database_dictionary import *
 from src.sorting_dict import *
-from src.input_edit_functions import *
+from src.input_edit_functions import main
 from src.graph_function import *
 
 
@@ -46,6 +46,7 @@ def dashboard_page():
     dash_root.rowconfigure(3, weight=1)
     dash_root.rowconfigure(4, weight=1)
     dash_root.rowconfigure(5, weight=1)
+    dash_root.rowconfigure(6, weight=1)
 
     #Creating a label in the dashboard page with text "dashboard" and setting its font and inserting it in row 0 and column 2
     dashboard_label = Label(dash_root, 
@@ -65,7 +66,7 @@ def dashboard_page():
         borderwidth=3,
         relief="raised",
         text="Enter Data", 
-        command = lambda: [dash_root.destroy(), input_page(sample_dict, sample_tag)]
+        command = lambda: [dash_root.destroy(), input_page(main_dictionary(), get_main_tags_set())]
         )
     input_button.grid(row=2, column=1)
 
@@ -79,7 +80,7 @@ def dashboard_page():
         borderwidth=3,
         relief="raised", 
         text="Edit Data",
-        command= lambda: [dash_root.destroy(), edit_page(sample_dict)]
+        command= lambda: [dash_root.destroy(), edit_page(main_dictionary())]
         )
     edit_button.grid(row=2, column=3)
 
@@ -110,6 +111,20 @@ def dashboard_page():
         command= lambda: [dash_root.destroy(), sorting_page()]
         )
     tabs_button.grid(row=4, column=3)
+
+
+    change_tag_button = Button(dash_root, 
+        width= int(dash_root.winfo_screenwidth()*0.015), 
+        height= int(dash_root.winfo_screenheight()*0.01),
+        font=("Arial",16),
+        fg="#2B332B",
+        bg="white",
+        borderwidth=3,
+        relief="raised",
+        text="Change tags", 
+        command = lambda: [dash_root.destroy(), change_tags_page()]
+        )
+    change_tag_button.grid(row=6, column=2)
     
     
     
@@ -469,11 +484,10 @@ def edit_page(main_dict):
         dict_frame[index].columnconfigure(4, weight=1)
         dict_frame[index].rowconfigure(0, weight=1)
 
-        def edit_command(index = index):
-            input_page(sample_dict, sample_tag, index=index, is_edit=True)
-            pass
+        def edit_command(selected_id):
+            input_page(main_dict, get_main_tags_set(), index=selected_id, is_edit=True)
         
-        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(index)], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
         full_data_button[index].grid(column=0, row=0)
 
         id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
@@ -627,9 +641,60 @@ def graph_page():
     graph_root.mainloop()
 
 
+def change_tags_page():
+    tag_page_root = Tk()
+    tag_page_root.geometry("{}x{}".format(tag_page_root.winfo_screenwidth(), tag_page_root.winfo_screenheight()))
+    tag_page_root.columnconfigure(0, weight=1)
+    tag_page_root.rowconfigure(0, weight=1)
+    tag_page_root.rowconfigure(1, weight=1)
+
+    selection_frame = Frame(tag_page_root)
+    selection_frame.grid(column=0, row=1)
+    selection_frame.columnconfigure(0, weight=1)
+    selection_frame.columnconfigure(1, weight=1)
+    selection_frame.rowconfigure(0, weight=1)
+
+    tag_enter_frame = Frame(tag_page_root)
+    tag_enter_frame.grid(column=0, row=0)
+    tag_enter_frame.columnconfigure(0, weight=1)
+    tag_enter_frame.rowconfigure(0, weight=1)
+    tag_enter_frame.rowconfigure(1, weight=1)
+
+    def change_tag(is_reset = False):
+        tags_set = set()
+        tags = tag_entry.get()
+        
+        for tag in tags.split():
+            tags_set.add(tag)
+
+        
+        if (is_reset == True):
+            setup_tags_file(tags_set, True)
+        else:
+            setup_tags_file(tags_set, False)
+
+    
+
+    reset_tag_button = Button(selection_frame, text="Reset tags", command=lambda: change_tag(True))
+    add_tag_button = Button(selection_frame, text="Add tags", command=lambda: change_tag(False))
+
+    reset_tag_button.grid(column=0, row=0)
+    add_tag_button.grid(column=1, row=0)
+
+    tag_label = Label(tag_enter_frame, text="Enter tags with space between each tag")    
+    tag_entry = Entry(tag_enter_frame, width=int(tag_enter_frame.winfo_screenheight()*0.1))
+
+    tag_label.grid(column=0, row=0)
+    tag_entry.grid(column=0, row=1)
+
+    tag_page_root.mainloop()
+
+
+
 #dashboard_page()
-input_page(main_dictionary(), get_main_tags_set())
+#input_page(main_dictionary(), get_main_tags_set())
 #sorting_page()
 #edit_page()
 #graph_page()
+#change_tags_page()
 
