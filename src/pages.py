@@ -1,10 +1,7 @@
 from tkinter import *
 from tkcalendar import DateEntry
 import customtkinter
-from time import sleep
-from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
-import matplotlib.pyplot as plt
-import numpy as np
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt 
 
@@ -13,20 +10,6 @@ from src.database_dictionary import *
 from src.sorting_dict import *
 from src.input_edit_functions import main
 from src.graph_function import *
-
-# Sample data for demonstration purposes
-sample_dict = {
-    'id': [1,2,3],
-    'date': [241101,241102,241103],
-    'tag': ['snacks','electricity bill','snacks'],
-    'amount': [250,1000,50],
-    'description': ['chips', 'bill', 'noodles']
-}
-
-sample_tag = ["snacks","bills","subcriptions"]
-
-
-
 
 
 # Function to create and display the dashboard page, to be called later in main.py
@@ -331,7 +314,7 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
             # Button to store the description entry    
             description_button = Button(root2, 
                                         text="Enter", 
-                                        command=enter_button,
+                                        command=lambda:[enter_button(),root2.destroy()],
                                         font=("Arial bold", 15)
                                         )
             description_button.grid(column=0, row=2)
@@ -730,46 +713,63 @@ def edit_page(main_dict):
 
 
 def graph_page():
-    main_dict = main_dictionary().copy()
+    # Access the main dictionary containing data for graphs
+    main_dict = main_dictionary()
+
+    # Create the main window for the graph page
     graph_root = Tk()
     graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
+    
+    # Configure the layout of the main window
     graph_root.columnconfigure(0, weight=1)
     graph_root.rowconfigure(0, weight=1)
     graph_root.rowconfigure(1, weight=1)
     graph_root.rowconfigure(2, weight=1)
 
 
-    #Creating the graph label
-    graph_main_label = Label(graph_root, text="Graph Page")
+    # Create and display the main label
+    graph_main_label = Label(graph_root, 
+                            text="Graph Page",
+                            font=("Arial bold", 16))
     graph_main_label.grid(column=0, row=0)
 
-    #Creating and configuring a frame separate for selecting key in dictionary to sort by
+    # Create a frame for selecting graph type, year, and month
     selection_frame = Frame(graph_root)
     selection_frame.grid(column=0, row=1)
+
+    # Configure columns in the selection frame for dropdowns and button
     selection_frame.columnconfigure(0, weight=1)
     selection_frame.columnconfigure(1, weight=1)
     selection_frame.columnconfigure(2, weight=1)
-    selection_frame.columnconfigure(2, weight=1)
+    selection_frame.columnconfigure(3, weight=1)
     selection_frame.rowconfigure(0, weight=1)
 
+     # Create a frame for displaying the graph
     graph_frame1 = Frame(graph_root)
     graph_frame1.grid(column=0, row=2)
+
+    # Create an initial empty figure and display it in the graph frame
+    fig = Figure()
+    initial_canvas=FigureCanvasTkAgg(fig, master=graph_frame1) 
+    initial_canvas.get_tk_widget().grid(column=0,row=0)
     
+    # Initialize variables for the selected graph type, year, and month
     graph_selected = 'pie'
     year_selected = '24'
     month_selected = '11'
-    # Change the selected sorting 
+
+    # Function to update the graph based on selected options 
     def change_graph(graph_selected, year_selected, month_selected): 
+        # Retrieve the current selections from dropdown menus
         graph_selected = graph_clicked.get()
         year_selected = year_clicked.get()
         month_selected = month_clicked.get()
 
-
+        # Create a new figure for the updated graph
         fig = Figure()
-
         plot1 = fig.add_subplot(111)
         
-
+        # Plot data based on the selected graph type
         if (graph_selected == 'pie chart'):
             amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
             plot1.pie(amount, labels=tag, autopct='%1.1f%%')
@@ -777,14 +777,16 @@ def graph_page():
 
         elif (graph_selected == 'bar chart'):
             data1, data2 = bar_total(main_dict, year_selected)
-            
             plot1.bar(data1, data2)
+            # Label each bar with its value
+            for x,y in zip(data1, data2):
+                plot1.text(x, y+20, '%d' % y, ha='center', va='center')
             
-
+        # Display the updated graph in the graph frame
         canvas = FigureCanvasTkAgg(fig, master=graph_frame1) 
         canvas.get_tk_widget().grid(column=0,row=0)
 
-
+    # Extract unique years and months from main_dict['date'] for dropdowns
     year_set = set()
     month_set = set()
     for index in range(0, len(main_dict['date'])): 
@@ -797,7 +799,7 @@ def graph_page():
     year_options = year_set
     month_options=month_set
 
-    # datatype of menu text 
+    # Variables to store the selected values in dropdowns
     graph_clicked = StringVar() 
     year_clicked = StringVar()
     month_clicked = StringVar()
@@ -807,73 +809,97 @@ def graph_page():
     year_clicked.set(list(year_set)[0])
     month_clicked.set(list(month_set)[0]) 
     
-    # Create Dropdown menu 
+    # Create Dropdown menus for graph type, year, and month selection 
     year_drop = OptionMenu(selection_frame , year_clicked, *year_options) 
     graph_drop = OptionMenu(selection_frame , graph_clicked, *graph_options)
     month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
     
-    # Create button, it start the sorting 
+    # Create button to trigger graph update 
     button = Button( selection_frame , text = "change" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
     
-    #Assigning grid placement to each element
+    # Arrange dropdowns and button in the selection frame
     graph_drop.grid(column=0, row=0)
     year_drop.grid(column=1, row=0)
     month_drop.grid(column=2,row=0)
     button.grid(column=3, row=0)
 
-        
-
+    # Start the main event loop for the graph page window
     graph_root.mainloop()
+
+     # Call function to navigate to the dashboard page after closing the graph page
+    dashboard_page()
 
 
 def change_tags_page():
+    # Create the main window for the tag page
     tag_page_root = Tk()
+
+    # Configure the background color and full-screen geometry
     tag_page_root.config(bg="#b39df5")
     tag_page_root.geometry("{}x{}".format(tag_page_root.winfo_screenwidth(), tag_page_root.winfo_screenheight()))
+
+    # Set the main grid layout to expand elements proportionally
     tag_page_root.columnconfigure(0, weight=1)
     tag_page_root.rowconfigure(0, weight=1)
     tag_page_root.rowconfigure(1, weight=1)
 
-    selection_frame = Frame(tag_page_root)
+    # Create a frame for the buttons to reset or add tags
+    selection_frame = Frame(tag_page_root, bg="#b39df5")
     selection_frame.grid(column=0, row=1)
     selection_frame.columnconfigure(0, weight=1)
     selection_frame.columnconfigure(1, weight=1)
+    selection_frame.columnconfigure(2, weight=1)
     selection_frame.rowconfigure(0, weight=1)
 
-    tag_enter_frame = Frame(tag_page_root)
+    # Create a frame for entering tags
+    tag_enter_frame = Frame(tag_page_root, bg="#b39df5")
     tag_enter_frame.grid(column=0, row=0)
+
+    # Configure rows and columns in the tag entry frame
     tag_enter_frame.columnconfigure(0, weight=1)
     tag_enter_frame.rowconfigure(0, weight=1)
     tag_enter_frame.rowconfigure(1, weight=1)
 
+    # Function to handle adding or resetting tags
     def change_tag(is_reset = False):
+        # Initialize an empty set for tags to avoid duplicates
         tags_set = set()
+
+        # Retrieve tags from entry
         tags = tag_entry.get()
-        
+
+        # Add each tag to the set by spliting the enrty at each space
         for tag in tags.split():
             tags_set.add(tag)
 
-        
+        # Call the setup function with a reset true or false
         if (is_reset == True):
             setup_tags_file(tags_set, True)
         else:
             setup_tags_file(tags_set, False)
 
     
-
+    # Create buttons to reset and add tags with respective commands
     reset_tag_button = Button(selection_frame, text="Reset tags", command=lambda: change_tag(True))
     add_tag_button = Button(selection_frame, text="Add tags", command=lambda: change_tag(False))
 
+    # Place the buttons in the grid
     reset_tag_button.grid(column=0, row=0)
-    add_tag_button.grid(column=1, row=0)
+    add_tag_button.grid(column=2, row=0)
 
-    tag_label = Label(tag_enter_frame, text="Enter tags with space between each tag")    
+    # Create and place a label and entry field for tag input
+    tag_label = Label(tag_enter_frame, text="Enter tags with space between each tag", font=("Arial bold", 20))    
     tag_entry = Entry(tag_enter_frame, width=int(tag_enter_frame.winfo_screenheight()*0.1))
 
+    # Position label and entry box in the grid
     tag_label.grid(column=0, row=0)
     tag_entry.grid(column=0, row=1)
 
+    # Start the main event loop for the window
     tag_page_root.mainloop()
+
+    # Calling the dashboard function to navigate to the dashboard page after closing the tag page
+    dashboard_page()
 
 
 
