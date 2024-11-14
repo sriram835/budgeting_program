@@ -815,7 +815,7 @@ def graph_page():
     month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
     
     # Create button to trigger graph update 
-    button = Button( selection_frame , text = "change" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
+    button = Button( selection_frame , text = "Show" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
     
     # Arrange dropdowns and button in the selection frame
     graph_drop.grid(column=0, row=0)
