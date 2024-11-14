@@ -543,7 +543,6 @@ def sorting_page():
                               padx=5
                               )
     description_button_label.grid(column=0, row=0)
-
     id_label0 = Label(dict_frame0, 
                       text="id",
                       width=int(dict_frame0.winfo_screenwidth()*(9/40)),
@@ -551,7 +550,6 @@ def sorting_page():
                       highlightthickness=1
                       )
     id_label0.grid(column=1, row=0)
-    
     date_label0 = Label(dict_frame0, 
                         text="date",
                         width=int(dict_frame0.winfo_screenwidth()*(9/40)),
@@ -559,7 +557,6 @@ def sorting_page():
                         highlightthickness=1
                         )
     date_label0.grid(column=2,row=0)
-    
     tag_label0 = Label(dict_frame0, 
                        text="tags",
                        width=int(dict_frame0.winfo_screenwidth()*(9/40)),
@@ -567,7 +564,6 @@ def sorting_page():
                        highlightthickness=1
                        )
     tag_label0.grid(column=3,row=0)
-    
     amount_label0 = Label(dict_frame0, 
                           text="amount",
                           width=int(dict_frame0.winfo_screenwidth()*(9/40)),
@@ -614,45 +610,81 @@ def edit_page(main_dict):
     
 
     dict_frame = dict()
-    full_data_button = dict()
+    edit_data_button = dict()
+    delete_data_button = dict()
     def dict_item(index):
 
         dict_frame[index] = Frame(edit_frame, width=edit_frame.winfo_screenwidth())
         dict_frame[index].grid(column=0,row=index+1)
-        dict_frame[index].columnconfigure(0, weight=1)
-        dict_frame[index].columnconfigure(1, weight=1)
-        dict_frame[index].columnconfigure(2, weight=1)
-        dict_frame[index].columnconfigure(3, weight=1)
-        dict_frame[index].columnconfigure(4, weight=1)
+        for i in range(0, 6):
+            dict_frame[index].columnconfigure(i, weight=1)
+
         dict_frame[index].rowconfigure(0, weight=1)
 
         def edit_command(selected_id):
             input_page(main_dict, get_main_tags_set(), index=selected_id, is_edit=True)
-        
-        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
-        full_data_button[index].grid(column=0, row=0)
 
-        id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
-        id_label.grid(column=1, row=0)
+        def delete_command(selected_id):
+            pass
+        
+
+        edit_button_width = int(edit_frame.winfo_screenwidth()*(1.44/100))
+        edit_data_button[index] = Button(dict_frame[index], 
+                                        text="Edit", 
+                                        command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], 
+                                        width=edit_button_width,
+                                        )
+        edit_data_button[index].propagate(0)
+        edit_data_button[index].grid(column=0, row=0)
+
+        delete_button_width = int(edit_frame.winfo_screenwidth()*(1.44/100))
+        delete_data_button[index] = Button(dict_frame[index], 
+                                        text="delete", 
+                                        command=lambda: [edit_root.destroy(), delete_command(main_dict['id'][index])], 
+                                        width=delete_button_width,
+                                        fg="black",
+                                        )
+        delete_data_button[index].propagate(0)
+        delete_data_button[index].grid(column=1, row=0)
+
+        labels_width = int(edit_frame.winfo_screenwidth()*(4/100))
+        id_label = Label(dict_frame[index], 
+                        text=main_dict['id'][index], 
+                        width=labels_width
+                        )
+        id_label.propagate(0)
+        id_label.grid(column=2, row=0)
 
         date = str(main_dict['date'][index])
         day = date[4:6]
         month = date[2:4]
         year = date[0:2]
-        date_label = Label(dict_frame[index], text=f"{day}/{month}/{year}", width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
-        date_label.grid(column=2,row=0)
+        date_label = Label(dict_frame[index], text=f"{day}/{month}/{year}", 
+                           width=labels_width
+                           )
+        date_label.propagate(0)
+        date_label.grid(column=3,row=0)
 
-        tag_label = Label(dict_frame[index], text=main_dict["tag"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
-        tag_label.grid(column=3,row=0)
+        tag_label = Label(dict_frame[index], 
+                          text=main_dict["tag"][index], 
+                          width=labels_width
+                          )
+        tag_label.propagate(0)
+        tag_label.grid(column=4,row=0)
 
-        amount_label = Label(dict_frame[index], text=main_dict["amount"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
-        amount_label.grid(column=4,row=0)
+        amount_label = Label(dict_frame[index], 
+                            text=main_dict["amount"][index], 
+                            width=labels_width
+                            )
+        amount_label.propagate(0)
+        amount_label.grid(column=5,row=0)
+
+        
 
 
 
     
-    dict_frame0 = Frame(edit_frame)
-
+    dict_frame0 = Frame(edit_frame, width=edit_frame.winfo_screenwidth())
     dict_frame0.grid(column=0,row=0)
     dict_frame0.columnconfigure(0, weight=1)
     dict_frame0.columnconfigure(1, weight=1)
@@ -660,20 +692,57 @@ def edit_page(main_dict):
     dict_frame0.columnconfigure(3, weight=1)
     dict_frame0.columnconfigure(4, weight=1)
     dict_frame0.rowconfigure(0, weight=1)
-    full_data_button0 = Button(dict_frame0, text=">", width=int(dict_frame0.winfo_screenwidth()*0.2))
-    full_data_button0.grid(column=0, row=0)
 
-    id_label0 = Label(dict_frame0, text="id",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
-    id_label0.grid(column=1, row=0)
 
-    date_label0 = Label(dict_frame0, text="date",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
-    date_label0.grid(column=2,row=0)
+    edit_button_width0 = int(edit_frame.winfo_screenwidth()*(3/100))
+    edit_data_button0 = Button(dict_frame0, 
+                            text="Edit",
+                            padx=12,
+                            width=edit_button_width0,
+                            )
+    edit_data_button0.propagate(0)
+    edit_data_button0.grid(column=0, row=0)
 
-    tag_label0 = Label(dict_frame0, text="tags",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
-    tag_label0.grid(column=3,row=0)
+    delete_button_width0 = int(edit_frame.winfo_screenwidth()*(3/100))
+    delete_data_label0 = Button(dict_frame0, 
+                                text="delete", 
+                                width=delete_button_width0,
+                                fg="black",
+                                padx=12,
+                                )
+    delete_data_label0.propagate(0)
+    delete_data_label0.grid(column=1, row=0)
 
-    amount_label0 = Label(dict_frame0, text="amount",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
-    amount_label0.grid(column=4,row=0)
+    labels_width0 = int(edit_frame.winfo_screenwidth()*(4.8/100))
+    id_label0 = Label(dict_frame0, 
+                    text="id",
+                    width=labels_width0,
+                    padx=20
+                    )
+    id_label0.propagate(0)
+    id_label0.grid(column=2, row=0)
+
+    date_label0 = Label(dict_frame0, text="date",
+                        width=labels_width0
+                        )
+    date_label0.propagate(0)
+    date_label0.grid(column=3,row=0)
+
+    tag_label0 = Label(dict_frame0, 
+                        text="tags",
+                        width=labels_width0
+                        )
+    tag_label0.propagate(0)
+    tag_label0.grid(column=4,row=0)
+
+    amount_label0 = Label(dict_frame0, 
+                          text="amount",
+                          width=labels_width0
+                          )
+    amount_label0.propagate(0)
+    amount_label0.grid(column=5,row=0)
+
+   
     
     for i in range(0, len(main_dict["id"])):
         dict_item(i)
@@ -702,7 +771,7 @@ def graph_page():
     selection_frame.columnconfigure(0, weight=1)
     selection_frame.columnconfigure(1, weight=1)
     selection_frame.columnconfigure(2, weight=1)
-    selection_frame.columnconfigure(2, weight=1)
+    selection_frame.columnconfigure(3, weight=1)
     selection_frame.rowconfigure(0, weight=1)
 
     graph_frame1 = Frame(graph_root)
