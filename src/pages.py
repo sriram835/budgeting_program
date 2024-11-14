@@ -146,7 +146,7 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
     input_root = Tk()
     input_root.geometry("{}x{}".format(input_root.winfo_screenwidth(), 
                                        input_root.winfo_screenheight()))
-    input_root.config(bg="#e0f7fa")  # Light cyan background
+    input_root.config(bg="#ede7f6")  
 
     # Configure column and row weights
     input_root.columnconfigure(0, weight=1)
@@ -154,23 +154,23 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
         input_root.rowconfigure(i, weight=1)
 
     # Frame for Date Entry
-    cal_frame = Frame(input_root, bg="#e0f7fa")
+    cal_frame = Frame(input_root, bg="#ede7f6")
     cal_frame.grid(column=0, row=0)
     cal_frame.columnconfigure(0, weight=1)
     cal_frame.columnconfigure(1, weight=1)
     cal_frame.rowconfigure(0, weight=1)
     
     # Frame for tag selection buttons
-    tag_frame2 = Frame(input_root, bg="#e0f7fa")
+    tag_frame2 = Frame(input_root, bg="#ede7f6")
     tag_frame2.grid(column=0, row=1)
 
     # Frame for displaying the selected tag
-    tag_frame1 = Frame(input_root, bg="#e0f7fa")
+    tag_frame1 = Frame(input_root, bg="#ede7f6")
     tag_frame1.grid(column=0, row=2)
 
     # Frame for entering amount
     amount_frame =Frame(input_root, 
-                        bg="#e0f7fa")
+                        bg="#ede7f6")
     amount_frame.columnconfigure(0, weight=1)
     amount_frame.columnconfigure(1, weight=1)
     amount_frame.rowconfigure(0, weight=1)
@@ -178,7 +178,7 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
     
     # Frame for data entry button 
     enter_data_frame = Frame(input_root, 
-                            bg="#e0f7fa")
+                            bg="#ede7f6")
     enter_data_frame.grid(column=0, row=4)
 
     # Dictionary to store tag buttons
@@ -529,17 +529,19 @@ def sorting_page():
 
 
 def edit_page(main_dict):
+    # Initialize the main editing window
     edit_root = Tk()
     edit_root.geometry("{}x{}".format(edit_root.winfo_screenwidth(), edit_root.winfo_screenheight()))
+    edit_root.config(bg="#b39df5")
     edit_root.columnconfigure(0, weight=1)
     edit_root.rowconfigure(0, weight=1)
 
-
+    # Create a scrollable frame for holding entries in edit_root
     edit_frame = customtkinter.CTkScrollableFrame(edit_root,
                                                      orientation="vertical", 
                                                      width=edit_root.winfo_screenwidth()*0.95,
                                                      height=edit_root.winfo_screenheight()*0.80,
-                                                     fg_color="white"
+                                                     fg_color="#ede7f6"
                                                      )
     edit_frame.grid(column=0, row=0)
     edit_frame.columnconfigure(0, weight=1)
@@ -547,13 +549,16 @@ def edit_page(main_dict):
         edit_frame.rowconfigure(i, weight=1)
     
     
-
+    # Dictionary to hold frames and buttons for each dictionary entry
     dict_frame = dict()
     edit_button = dict()
-    def dict_item(index):
 
+    # Function to create an individual row for each item in main_dict
+    def dict_item(index):
+         # Create a frame for each dictionary item in edit_frame
         dict_frame[index] = Frame(edit_frame, width=edit_frame.winfo_screenwidth())
         dict_frame[index].grid(column=0,row=index+1)
+        dict_frame[index].config(bg="#79d6e0")
         dict_frame[index].columnconfigure(0, weight=1)
         dict_frame[index].columnconfigure(1, weight=1)
         dict_frame[index].columnconfigure(2, weight=1)
@@ -561,73 +566,105 @@ def edit_page(main_dict):
         dict_frame[index].columnconfigure(4, weight=1)
         dict_frame[index].rowconfigure(0, weight=1)
 
+        # Function to handle the edit button command
         def edit_command(selected_id):
+            # Open a secondary edit window to select edit or delete the selected id
             second_edit_root = Tk()
             second_edit_root.geometry("600x600")
 
+            # Button to confirm edit action, closes window and opens input_page for selected entry
             edit_button = Button(second_edit_root, 
                                 text="Edit", 
+                                bg = "#79d6e0",
                                 command=lambda:[second_edit_root.destroy(), input_page(main_dict, get_main_tags_set(), index=selected_id, is_edit=True)]
                                 )
             edit_button.pack()
 
+            # Button to confirm delete action, calls main function with delete parameters
             delete_button = Button(second_edit_root, 
+                                   bg = "#79d6e0",
                                     text="Delete", command=lambda:[second_edit_root.destroy(), main('','','','','4',main_dict, selected_id)])
             
             delete_button.pack()
             
             second_edit_root.mainloop()
 
-        edit_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        # Add the edit button in dict_frame, which calls edit_command for each specific item
+        edit_button[index] = Button(dict_frame[index], 
+                                    bg = "#79d6e0",
+                                    text=">", 
+                                    command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
         edit_button[index].grid(column=0, row=0)
 
-        id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        # Display various attributes of each dictionary entry (ID, date, tag, amount)
+        id_label = Label(dict_frame[index], 
+                        bg = "#79d6e0", 
+                        text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
         id_label.grid(column=1, row=0)
 
+        # Converting date from YYMMDD to DD/MM/YY
         date = str(main_dict['date'][index])
         day = date[4:6]
         month = date[2:4]
         year = date[0:2]
-        date_label = Label(dict_frame[index], text=f"{day}/{month}/{year}", width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        date_label = Label(dict_frame[index], 
+                           bg = "#79d6e0",
+                           text=f"{day}/{month}/{year}", width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
         date_label.grid(column=2,row=0)
 
-        tag_label = Label(dict_frame[index], text=main_dict["tag"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        # Display tag and amount for each entry
+        tag_label = Label(dict_frame[index], 
+                          bg = "#79d6e0",
+                          text=main_dict["tag"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
         tag_label.grid(column=3,row=0)
 
-        amount_label = Label(dict_frame[index], text=main_dict["amount"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        amount_label = Label(dict_frame[index], 
+                            bg = "#79d6e0",
+                            text=main_dict["amount"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
         amount_label.grid(column=4,row=0)
 
 
 
-    
+    # Create header row in the edit_frame
     dict_frame0 = Frame(edit_frame)
 
     dict_frame0.grid(column=0,row=0)
-    dict_frame0.columnconfigure(0, weight=1)
-    dict_frame0.columnconfigure(1, weight=1)
-    dict_frame0.columnconfigure(2, weight=1)
-    dict_frame0.columnconfigure(3, weight=1)
-    dict_frame0.columnconfigure(4, weight=1)
+    dict_frame0.config(bg = "#79d6e0",)
+    for i in range(0, 5):
+        dict_frame0.columnconfigure(i, weight=1)
     dict_frame0.rowconfigure(0, weight=1)
-    full_data_button0 = Button(dict_frame0, text=">", width=int(dict_frame0.winfo_screenwidth()*0.2))
+    
+    # Labels for each column in the header
+    full_data_button0 = Button(dict_frame0, 
+                               bg = "#79d6e0",
+                               text=">", width=int(dict_frame0.winfo_screenwidth()*0.2))
     full_data_button0.grid(column=0, row=0)
 
-    id_label0 = Label(dict_frame0, text="id",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    id_label0 = Label(dict_frame0, 
+                    bg = "#79d6e0",
+                    text="id",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
     id_label0.grid(column=1, row=0)
 
-    date_label0 = Label(dict_frame0, text="date",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    date_label0 = Label(dict_frame0, 
+                        bg = "#79d6e0",
+                        text="date",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
     date_label0.grid(column=2,row=0)
 
-    tag_label0 = Label(dict_frame0, text="tags",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    tag_label0 = Label(dict_frame0, 
+                       bg = "#79d6e0",
+                       text="tags",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
     tag_label0.grid(column=3,row=0)
 
-    amount_label0 = Label(dict_frame0, text="amount",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+    amount_label0 = Label(dict_frame0, 
+                        bg = "#79d6e0",
+                        text="amount",width=int(dict_frame0.winfo_screenwidth()*(9/40)))
     amount_label0.grid(column=4,row=0)
     
+    # Create rows for each entry in main_dict
     for i in range(0, len(main_dict["id"])):
         dict_item(i)
 
-    # Execute tkinter 
+    # Start the main tkinter loop 
     edit_root.mainloop()
 
 
@@ -661,7 +698,7 @@ def graph_page():
     year_selected = '24'
     month_selected = '11'
     # Change the selected sorting 
-    def change_graph(graph_selected, year_selected): 
+    def change_graph(graph_selected, year_selected, month_selected): 
         graph_selected = graph_clicked.get()
         year_selected = year_clicked.get()
         month_selected = month_clicked.get()
@@ -715,7 +752,7 @@ def graph_page():
     month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
     
     # Create button, it start the sorting 
-    button = Button( selection_frame , text = "change" , command = lambda: change_graph(graph_selected, year_selected) )
+    button = Button( selection_frame , text = "change" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
     
     #Assigning grid placement to each element
     graph_drop.grid(column=0, row=0)
@@ -730,6 +767,7 @@ def graph_page():
 
 def change_tags_page():
     tag_page_root = Tk()
+    tag_page_root.config(bg="#b39df5")
     tag_page_root.geometry("{}x{}".format(tag_page_root.winfo_screenwidth(), tag_page_root.winfo_screenheight()))
     tag_page_root.columnconfigure(0, weight=1)
     tag_page_root.rowconfigure(0, weight=1)
