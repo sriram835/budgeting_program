@@ -549,7 +549,7 @@ def edit_page(main_dict):
     
 
     dict_frame = dict()
-    full_data_button = dict()
+    edit_button = dict()
     def dict_item(index):
 
         dict_frame[index] = Frame(edit_frame, width=edit_frame.winfo_screenwidth())
@@ -562,10 +562,24 @@ def edit_page(main_dict):
         dict_frame[index].rowconfigure(0, weight=1)
 
         def edit_command(selected_id):
-            input_page(main_dict, get_main_tags_set(), index=selected_id, is_edit=True)
-        
-        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
-        full_data_button[index].grid(column=0, row=0)
+            second_edit_root = Tk()
+            second_edit_root.geometry("600x600")
+
+            edit_button = Button(second_edit_root, 
+                                text="Edit", 
+                                command=lambda:[second_edit_root.destroy(), input_page(main_dict, get_main_tags_set(), index=selected_id, is_edit=True)]
+                                )
+            edit_button.pack()
+
+            delete_button = Button(second_edit_root, 
+                                    text="Delete", command=lambda:[second_edit_root.destroy(), main('','','','','4',main_dict, selected_id)])
+            
+            delete_button.pack()
+            
+            second_edit_root.mainloop()
+
+        edit_button[index] = Button(dict_frame[index], text=">", command=lambda: [edit_root.destroy(), edit_command(main_dict['id'][index])], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        edit_button[index].grid(column=0, row=0)
 
         id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
         id_label.grid(column=1, row=0)
@@ -659,7 +673,6 @@ def graph_page():
         
 
         if (graph_selected == 'pie chart'):
-            print(main_dict)
             amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
             plot1.pie(amount, labels=tag, autopct='%1.1f%%')
 

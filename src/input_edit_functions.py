@@ -28,6 +28,13 @@ class Budget:
     
         dict_to_database(main_dict)
 
+    def delete_entry(self, entry_id, main_dict):
+        if entry_id in main_dict['id']:
+            index = main_dict['id'].index(entry_id)
+            for key in main_dict.keys():
+                main_dict[key].pop(index)
+            dict_to_database(main_dict)
+
 
     def get_entries(self):
         print("\n--- Budget Entries ---")
@@ -87,7 +94,10 @@ def main(date, tag, amount, description, choice, main_dict, entry_id):
         budget.get_entries()
     
     elif choice == '4':
-        print("Exiting the program.")
+        if entry_id in main_dict['id']:
+            budget.delete_entry(entry_id, main_dict)
+        else:   
+            print(f"No entry found with ID: {entry_id}.")
     
     else:
         print("Invalid option. Please try again.")
