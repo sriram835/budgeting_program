@@ -358,8 +358,7 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
 
 
 
-def sorting_page():
-    #Creating the main window, setting its size and assigning each row and coloumn length
+#Creating the main window, setting its size and assigning each row and coloumn length
     sort_root = Tk()
     sort_root.geometry("{}x{}".format(sort_root.winfo_screenwidth(), sort_root.winfo_screenheight()))
     sort_root.columnconfigure(0, weight=1)
@@ -369,14 +368,14 @@ def sorting_page():
     #Creating and configuring a frame separate for selecting key in dictionary to sort by
     selection_frame = Frame(sort_root)
     selection_frame.grid(column=0, row=0)
-    selection_frame.columnconfigure(0, weight=1)
-    selection_frame.columnconfigure(1, weight=1)
-    selection_frame.columnconfigure(2, weight=1)
+    for i in range(0, 11):
+        selection_frame.columnconfigure(i, weight=1)
     selection_frame.rowconfigure(0, weight=1)
 
     # Initial sorting settings
     key_selected = "id"
     order_selected = "Ascending"
+    color_configure="white"
 
     # Function to change the selected sorting key and order, and display sorted items 
     def change_selected_sort(key_selected, order_selected): 
@@ -395,31 +394,64 @@ def sorting_page():
         for i in range(0,len(main_dict["id"])):
             dict_item(i)
         
+
+    #Changes color of background
+    def color_change(color_selected):
+        color_selected=color_clicked.get().lower()
+        sort_root.configure(bg=color_selected)
+        sorting_frame0.configure(fg_color=color_selected)
+        selection_frame.configure( bg=color_selected)
     
     # Getting main dictionary and options for sorting 
     main_dict = main_dictionary()
     key_options = list(main_dict.keys())
     order_options = ["Ascending","Descending"]
+    color_options=["Black","White","Lightblue","Red","Pink","Gray","Orange","Blue"]
 
     # Variables to store dropdown menu selections 
     key_clicked = StringVar() 
     order_clicked = StringVar()
-    
+    color_clicked= StringVar()
+
     # Set initial menu text  
     key_clicked.set("id")
     order_clicked.set("Ascending") 
+    color_clicked.set("White")
     
-    # Create Dropdown menus for key and order, and sorting button 
-    order_drop = OptionMenu(selection_frame , order_clicked, *order_options) 
-    key_drop = OptionMenu(selection_frame , key_clicked, *key_options) 
-    
+    # Create Dropdown menus for key and order, and  colors
+    order_drop = OptionMenu(selection_frame , 
+                            order_clicked, 
+                            *order_options,
+                            ) 
+    order_drop.config(font=("Arial bold",10))
+    key_drop = OptionMenu(selection_frame, 
+                            key_clicked, 
+                            *key_options,
+                            )
+    key_drop.config(font=("Arial bold",10))
+    colors_drop=OptionMenu(selection_frame, 
+                            color_clicked, 
+                            *color_options,
+                            )
+    colors_drop.config(font=("Arial bold",10))
+
     # Create button, it start the sorting 
-    button = Button( selection_frame , text = "Sort" , command = lambda: change_selected_sort(key_selected, order_selected) )
-    
+    button = Button( selection_frame , 
+                    text = "Sort", 
+                    command = lambda: change_selected_sort(key_selected, order_selected),
+                    font=("Arial bold",10) 
+                    )
+    button_color=Button(selection_frame,text="Change Color",
+                        command=lambda: color_change(color_clicked), 
+                        font=("Arial bold",10)
+                        )
+
     # Place dropdown menus and button in grid
-    key_drop.grid(column=0, row=0)
-    order_drop.grid(column=1, row=0)
-    button.grid(column=2, row=0)
+    key_drop.grid(column=1, row=0,padx=2)
+    order_drop.grid(column=3, row=0,padx=2)
+    colors_drop.grid(column=5,row=0,padx=2)
+    button.grid(column=7, row=0,padx=2)
+    button_color.grid(column=9, row=0,padx=2)
 
 
     #Creating and configuring a frame separate for displaying sorted dictionary
@@ -462,10 +494,16 @@ def sorting_page():
             sorting_page()
         
         # Button to view description
-        full_data_button[index] = Button(dict_frame[index], text=">", command=lambda: [sort_root.destroy(),display_description(index)], width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
+        full_data_button[index] = Button(dict_frame[index], 
+                                        text=">", 
+                                        command=lambda: [sort_root.destroy(),display_description(index)], 
+                                        width=int(dict_frame[index].winfo_screenwidth()*(0.2)))
         full_data_button[index].grid(column=0, row=0)
 
-        id_label = Label(dict_frame[index], text=main_dict['id'][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        id_label = Label(dict_frame[index], 
+                        text=main_dict['id'][index], 
+                        width=int(dict_frame[index].winfo_screenwidth()*(9/40))
+                        )
         id_label.grid(column=1, row=0)
 
         # Converting date from YYMMDD to DD/MM/YY
@@ -473,13 +511,22 @@ def sorting_page():
         day = date[4:6]
         month = date[2:4]
         year = date[0:2]
-        date_label = Label(dict_frame[index], text=f"{day}/{month}/{year}", width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        date_label = Label(dict_frame[index], 
+                            text=f"{day}/{month}/{year}", 
+                            width=int(dict_frame[index].winfo_screenwidth()*(9/40))
+                            )
         date_label.grid(column=2,row=0)
 
-        tag_label = Label(dict_frame[index], text=main_dict["tag"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        tag_label = Label(dict_frame[index], 
+                            text=main_dict["tag"][index], 
+                            width=int(dict_frame[index].winfo_screenwidth()*(9/40))
+                            )
         tag_label.grid(column=3,row=0)
 
-        amount_label = Label(dict_frame[index], text=main_dict["amount"][index], width=int(dict_frame[index].winfo_screenwidth()*(9/40)))
+        amount_label = Label(dict_frame[index], 
+                            text=main_dict["amount"][index], 
+                            width=int(dict_frame[index].winfo_screenwidth()*(9/40))
+                            )
         amount_label.grid(column=4,row=0)
 
     # Frame header for displaying labels of the columns (id, date, tag, amount)
@@ -490,25 +537,39 @@ def sorting_page():
     dict_frame0.rowconfigure(0, weight=1)
 
     # Header labels for the columns
-    full_data_button0 = Button(dict_frame0, 
-                               text=">", 
-                               width=int(dict_frame0.winfo_screenwidth()*0.2))
-    full_data_button0.grid(column=0, row=0)
+    description_button_label = Label(dict_frame0, 
+                              text="Description", 
+                              width=int(dict_frame0.winfo_screenwidth()*0.2), 
+                              padx=5
+                              )
+    description_button_label.grid(column=0, row=0)
     id_label0 = Label(dict_frame0, 
                       text="id",
-                      width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+                      width=int(dict_frame0.winfo_screenwidth()*(9/40)),
+                      highlightbackground='black', 
+                      highlightthickness=1
+                      )
     id_label0.grid(column=1, row=0)
     date_label0 = Label(dict_frame0, 
                         text="date",
-                        width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+                        width=int(dict_frame0.winfo_screenwidth()*(9/40)),
+                        highlightbackground='black', 
+                        highlightthickness=1
+                        )
     date_label0.grid(column=2,row=0)
     tag_label0 = Label(dict_frame0, 
                        text="tags",
-                       width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+                       width=int(dict_frame0.winfo_screenwidth()*(9/40)),
+                       highlightbackground='black', 
+                       highlightthickness=1
+                       )
     tag_label0.grid(column=3,row=0)
     amount_label0 = Label(dict_frame0, 
                           text="amount",
-                          width=int(dict_frame0.winfo_screenwidth()*(9/40)))
+                          width=int(dict_frame0.winfo_screenwidth()*(9/40)),
+                          highlightbackground='black', 
+                          highlightthickness=1
+                          )
     amount_label0.grid(column=4,row=0)
     
     # Perform sorting and display items based on initial selected order
