@@ -3,9 +3,8 @@ import matplotlib.pyplot as plt
 
 from src.database_dictionary import main_dictionary 
 
-d = {'id':[1,2,3,4], 'date':[241101, 241102, 241003,241105], 'tag':['snacks','electricity bill','snacks','books'],'amount': [500,1000,50,100], 'description':['chips','bill','noodles','books']}
-main_dict1 = main_dictionary().copy()
-print(main_dict1)
+sample_dict = {'id':[1,2,3,4], 'date':[241101, 241102, 241003,241105], 'tag':['snacks','electricity bill','snacks','books'],'amount': [500,1000,50,100], 'description':['chips','bill','noodles','books']}
+
 
 def pie_individual_tag(main_dict, year_input, month_input):
     tags_list= list()
