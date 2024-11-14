@@ -357,8 +357,8 @@ def input_page(main_dict, main_tag, index=0, is_edit=False):
 
 
 
-
-#Creating the main window, setting its size and assigning each row and coloumn length
+def sorting_page():
+    #Creating the main window, setting its size and assigning each row and coloumn length
     sort_root = Tk()
     sort_root.geometry("{}x{}".format(sort_root.winfo_screenwidth(), sort_root.winfo_screenheight()))
     sort_root.columnconfigure(0, weight=1)
