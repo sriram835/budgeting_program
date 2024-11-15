@@ -711,123 +711,138 @@ def edit_page(main_dict):
     # Start the main tkinter loop 
     edit_root.mainloop()
 
+    # Call function to navigate to the dashboard page after closing the edit page
+    dashboard_page()
+
 
 def graph_page():
     # Access the main dictionary containing data for graphs
     main_dict = main_dictionary()
 
-    # Create the main window for the graph page
-    graph_root = Tk()
-    graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
-    
-    # Configure the layout of the main window
-    graph_root.columnconfigure(0, weight=1)
-    graph_root.rowconfigure(0, weight=1)
-    graph_root.rowconfigure(1, weight=1)
-    graph_root.rowconfigure(2, weight=1)
-
-
-    # Create and display the main label
-    graph_main_label = Label(graph_root, 
-                            text="Graph Page",
-                            font=("Arial bold", 16))
-    graph_main_label.grid(column=0, row=0)
-
-    # Create a frame for selecting graph type, year, and month
-    selection_frame = Frame(graph_root)
-    selection_frame.grid(column=0, row=1)
-
-    # Configure columns in the selection frame for dropdowns and button
-    selection_frame.columnconfigure(0, weight=1)
-    selection_frame.columnconfigure(1, weight=1)
-    selection_frame.columnconfigure(2, weight=1)
-    selection_frame.columnconfigure(3, weight=1)
-    selection_frame.rowconfigure(0, weight=1)
-
-     # Create a frame for displaying the graph
-    graph_frame1 = Frame(graph_root)
-    graph_frame1.grid(column=0, row=2)
-
-    # Create an initial empty figure and display it in the graph frame
-    fig = Figure()
-    initial_canvas=FigureCanvasTkAgg(fig, master=graph_frame1) 
-    initial_canvas.get_tk_widget().grid(column=0,row=0)
-    
-    # Initialize variables for the selected graph type, year, and month
-    graph_selected = 'pie'
-    year_selected = '24'
-    month_selected = '11'
-
-    # Function to update the graph based on selected options 
-    def change_graph(graph_selected, year_selected, month_selected): 
-        # Retrieve the current selections from dropdown menus
-        graph_selected = graph_clicked.get()
-        year_selected = year_clicked.get()
-        month_selected = month_clicked.get()
-
-        # Create a new figure for the updated graph
-        fig = Figure()
-        plot1 = fig.add_subplot(111)
+    if (len(main_dict['id'])>0):
+        # Create the main window for the graph page
+        graph_root = Tk()
+        graph_root.geometry("{}x{}".format(graph_root.winfo_screenwidth(), graph_root.winfo_screenheight()))
         
-        # Plot data based on the selected graph type
-        if (graph_selected == 'pie chart'):
-            amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
-            plot1.pie(amount, labels=tag, autopct='%1.1f%%')
+        # Configure the layout of the main window
+        graph_root.columnconfigure(0, weight=1)
+        graph_root.rowconfigure(0, weight=1)
+        graph_root.rowconfigure(1, weight=1)
+        graph_root.rowconfigure(2, weight=1)
 
 
-        elif (graph_selected == 'bar chart'):
-            data1, data2 = bar_total(main_dict, year_selected)
-            plot1.bar(data1, data2)
-            # Label each bar with its value
-            for x,y in zip(data1, data2):
-                plot1.text(x, y+20, '%d' % y, ha='center', va='center')
+        # Create and display the main label
+        graph_main_label = Label(graph_root, 
+                                text="Graph Page",
+                                font=("Arial bold", 16))
+        graph_main_label.grid(column=0, row=0)
+
+        # Create a frame for selecting graph type, year, and month
+        selection_frame = Frame(graph_root)
+        selection_frame.grid(column=0, row=1)
+
+        # Configure columns in the selection frame for dropdowns and button
+        selection_frame.columnconfigure(0, weight=1)
+        selection_frame.columnconfigure(1, weight=1)
+        selection_frame.columnconfigure(2, weight=1)
+        selection_frame.columnconfigure(3, weight=1)
+        selection_frame.rowconfigure(0, weight=1)
+
+        # Create a frame for displaying the graph
+        graph_frame1 = Frame(graph_root)
+        graph_frame1.grid(column=0, row=2)
+
+        # Create an initial empty figure and display it in the graph frame
+        fig = Figure()
+        initial_canvas=FigureCanvasTkAgg(fig, master=graph_frame1) 
+        initial_canvas.get_tk_widget().grid(column=0,row=0)
+        
+        # Initialize variables for the selected graph type, year, and month
+        graph_selected = 'pie'
+        year_selected = '24'
+        month_selected = '11'
+
+        # Function to update the graph based on selected options 
+        def change_graph(graph_selected, year_selected, month_selected): 
+            # Retrieve the current selections from dropdown menus
+            graph_selected = graph_clicked.get()
+            year_selected = year_clicked.get()
+            month_selected = month_clicked.get()
+
+            # Create a new figure for the updated graph
+            fig = Figure()
+            plot1 = fig.add_subplot(111)
             
-        # Display the updated graph in the graph frame
-        canvas = FigureCanvasTkAgg(fig, master=graph_frame1) 
-        canvas.get_tk_widget().grid(column=0,row=0)
+            # Plot data based on the selected graph type
+            if (graph_selected == 'pie chart'):
+                amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
+                plot1.pie(amount, labels=tag, autopct='%1.1f%%')
 
-    # Extract unique years and months from main_dict['date'] for dropdowns
-    year_set = set()
-    month_set = set()
-    for index in range(0, len(main_dict['date'])): 
-        date = str(main_dict['date'][index])
-        month_set.add(date[2:4])
-        year_set.add(date[0:2])
 
-    # Dropdown menu options 
-    graph_options = ["bar chart", 'pie chart']
-    year_options = year_set
-    month_options=month_set
+            elif (graph_selected == 'bar chart'):
+                data1, data2 = bar_total(main_dict, year_selected)
+                plot1.bar(data1, data2)
+                # Label each bar with its value
+                for x,y in zip(data1, data2):
+                    plot1.text(x, y+20, '%d' % y, ha='center', va='center')
+                
+            # Display the updated graph in the graph frame
+            canvas = FigureCanvasTkAgg(fig, master=graph_frame1) 
+            canvas.get_tk_widget().grid(column=0,row=0)
 
-    # Variables to store the selected values in dropdowns
-    graph_clicked = StringVar() 
-    year_clicked = StringVar()
-    month_clicked = StringVar()
-    
-    # initial menu text 
-    graph_clicked.set("bar chart")
-    year_clicked.set(list(year_set)[0])
-    month_clicked.set(list(month_set)[0]) 
-    
-    # Create Dropdown menus for graph type, year, and month selection 
-    year_drop = OptionMenu(selection_frame , year_clicked, *year_options) 
-    graph_drop = OptionMenu(selection_frame , graph_clicked, *graph_options)
-    month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
-    
-    # Create button to trigger graph update 
-    button = Button( selection_frame , text = "Show" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
-    
-    # Arrange dropdowns and button in the selection frame
-    graph_drop.grid(column=0, row=0)
-    year_drop.grid(column=1, row=0)
-    month_drop.grid(column=2,row=0)
-    button.grid(column=3, row=0)
+        # Extract unique years and months from main_dict['date'] for dropdowns
+        year_set = set()
+        month_set = set()
+        for index in range(0, len(main_dict['date'])): 
+            date = str(main_dict['date'][index])
+            month_set.add(date[2:4])
+            year_set.add(date[0:2])
 
-    # Start the main event loop for the graph page window
-    graph_root.mainloop()
+        # Dropdown menu options 
+        graph_options = ["bar chart", 'pie chart']
+        year_options = year_set
+        month_options=month_set
 
-     # Call function to navigate to the dashboard page after closing the graph page
-    dashboard_page()
+        # Variables to store the selected values in dropdowns
+        graph_clicked = StringVar() 
+        year_clicked = StringVar()
+        month_clicked = StringVar()
+        
+        # initial menu text 
+        graph_clicked.set("bar chart")
+        year_clicked.set(list(year_set)[0])
+        month_clicked.set(list(month_set)[0]) 
+        
+        # Create Dropdown menus for graph type, year, and month selection 
+        year_drop = OptionMenu(selection_frame , year_clicked, *year_options) 
+        graph_drop = OptionMenu(selection_frame , graph_clicked, *graph_options)
+        month_drop = OptionMenu(selection_frame , month_clicked, *month_options)  
+        
+        # Create button to trigger graph update 
+        button = Button( selection_frame , text = "Show" , command = lambda: change_graph(graph_selected, year_selected, month_selected) )
+        
+        # Arrange dropdowns and button in the selection frame
+        graph_drop.grid(column=0, row=0)
+        year_drop.grid(column=1, row=0)
+        month_drop.grid(column=2,row=0)
+        button.grid(column=3, row=0)
+
+        # Start the main event loop for the graph page window
+        graph_root.mainloop()
+
+        # Call function to navigate to the dashboard page after closing the graph page
+        dashboard_page()
+
+    #Showing an window saying no data, if data is not available
+    else:
+        err_root = Tk()
+        err_root.geometry("500x500")
+        
+        err_label = Label(err_root, text="No data", font=("Arial bold", 20))
+        err_label.pack()
+
+        err_root.mainloop()
+        dashboard_page()
 
 
 def change_tags_page():
@@ -902,11 +917,4 @@ def change_tags_page():
     dashboard_page()
 
 
-
-#dashboard_page()
-#input_page(main_dictionary(), get_main_tags_set())
-#sorting_page()
-#edit_page()
-#graph_page()
-#change_tags_page()
 

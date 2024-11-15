@@ -20,8 +20,7 @@ def pie_individual_tag(main_dict, year_input, month_input):
                 current_sum += main_dict['amount'][index]
         #Storing the unique value of tags and respective amounts in list.
         tags_list.append(tag)
-        amount_list.append(current_sum)       
-    print(amount_list, tags_list)
+        amount_list.append(current_sum)
     amount = np.array(amount_list)
     tags = np.array(tags_list)
     data = [amount, tags]

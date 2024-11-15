@@ -16,13 +16,16 @@ class Budget:
         if self.entries:
             self.next_id = max(self.entries.keys()) + 1 # next_id = 1 + maximum key ID in the 'entries' dictionary
 
-        entry_id = max(main_dict['id'])
+        if (main_dict['id']==[]):
+            entry_id = 1
+        else:
+            entry_id = max(main_dict['id']) + 1
         self.entries[entry_id] = entry
 
         for key in main_dict.keys():
 
             if (key == 'id'):
-                main_dict[key].append(entry_id + 1)
+                main_dict[key].append(entry_id)
 
             else:
                 main_dict[key].append(self.entries[entry_id][key])
@@ -41,7 +44,7 @@ class Budget:
 
         '''
             
-        if entry_id in self.entries:
+        if entry_id in main_dict['id']:
             index = main_dict['id'].index(entry_id)
             for key in main_dict.keys():
                 main_dict[key][index] = updated_entry[key]     
@@ -60,7 +63,7 @@ class Budget:
         main_dict - main dictionary
 
         '''
-        if entry_id in main_dict:
+        if entry_id in main_dict['id']:
             index = main_dict['id'].index(entry_id)
             for key in main_dict.keys():
                 main_dict[key].pop(index)
@@ -127,6 +130,3 @@ def main(date, tag, amount, description, choice, main_dict, entry_id):
     else:
         print("Invalid option. Please try again.")
 
-
-if __name__ == "__main__":
-    main()

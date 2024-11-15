@@ -1,7 +1,8 @@
 class Sort():
     def __init__(self,dictionary):
         self.dictionary=dictionary
-
+    
+    #Sorts a column in dictionary in the ascending order
     def Ascend_Sorting(self,column):
         l=list(self.dictionary.keys())
         l.remove(column)
@@ -11,7 +12,8 @@ class Sort():
                     self.dictionary[column][j],self.dictionary[column][j+1]=self.dictionary[column][j+1],self.dictionary[column][j]
                     for keys in l:
                         self.dictionary[keys][j],self.dictionary[keys][j+1]=self.dictionary[keys][j+1],self.dictionary[keys][j]
-
+    
+    #Sorts a column in dictionary in the descending order
     def Descend_Sorting(self,column):
         l=list(self.dictionary.keys())
         l.remove(column)
