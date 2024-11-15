@@ -1,5 +1,5 @@
 # Importing everything from the 'database_dictionary' module located in the 'src' directory
-from src.database_dictionary import *
+from database_dictionary import *
 
 class Budget:
     # Initializing the Budget class with an empty entries dictionary and next_id counter
