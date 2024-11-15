@@ -1,4 +1,4 @@
-from src.database_dictionary import *
+from database_dictionary import *
 
 class Budget:
     def __init__(self):

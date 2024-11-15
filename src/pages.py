@@ -9,10 +9,10 @@ from matplotlib.figure import Figure
 import matplotlib.pyplot as plt 
 
 #Importing other pages in src folder
-from src.database_dictionary import *
-from src.sorting_dict import *
-from src.input_edit_functions import main
-from src.graph_function import *
+from database_dictionary import *
+from sorting_dict import *
+from input_edit_functions import main
+from graph_function import *
 
 # Sample data for demonstration purposes
 sample_dict = {

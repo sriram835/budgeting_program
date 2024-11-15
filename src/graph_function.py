@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.database_dictionary import main_dictionary 
+from database_dictionary import main_dictionary 
 
 d = {'id':[1,2,3,4], 'date':[241101, 241102, 241003,241105], 'tag':['snacks','electricity bill','snacks','books'],'amount': [500,1000,50,100], 'description':['chips','bill','noodles','books']}
 main_dict1 = main_dictionary().copy()

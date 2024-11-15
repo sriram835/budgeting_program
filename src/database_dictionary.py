@@ -6,9 +6,9 @@ def setup_tags_file(tags_set, is_reset = False):
     total_tag = ""
     
     if (is_reset == True):
-        tags_file = open("budgeting_program/database/tags.txt", "w")
+        tags_file = open("./budgeting_program/database/tags.txt", "w")
     else:
-        tags_file = open("budgeting_program/database/tags.txt", "a")
+        tags_file = open("./budgeting_program/database/tags.txt", "a")
     
     
     for i in tags_set:
@@ -20,12 +20,12 @@ def setup_tags_file(tags_set, is_reset = False):
 
 #Creating a fuction that 
 def get_main_tags_set():
-    tags_file = open("budgeting_program/database/tags.txt", "r")
+    tags_file = open("./budgeting_program/database/tags.txt", "r")
     tag_set = set(map(str, tags_file.read().strip().split()))
     return list(tag_set)
 
 def main_dictionary():
-    data = pd.read_excel('budgeting_program/database/sample_database.xlsx')
+    data = pd.read_excel('./budgeting_program/database/sample_database.xlsx')
     main_dict = dict()
 
     keys_list = list(data.columns)
@@ -36,6 +36,6 @@ def main_dictionary():
 
 def dict_to_database(main_dict):
     data = pd.DataFrame.from_dict(main_dict)
-    data.to_excel("budgeting_program/database/sample_database.xlsx", index=False)
+    data.to_excel("./budgeting_program/database/sample_database.xlsx", index=False)
     
 
