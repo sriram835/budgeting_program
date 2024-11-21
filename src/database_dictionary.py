@@ -41,3 +41,4 @@ def dict_to_database(main_dict):
     data.to_excel("budgeting_program/database/expenses.xlsx", index=False)
     
 
+#print(main_dictionary())

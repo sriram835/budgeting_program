@@ -32,12 +32,14 @@ def pie_individual_tag(main_dict, year_input, month_input):
 def bar_total(main_dict, year):
     expences = main_dict['amount']
     month_expence = dict()
-    for i in main_dict['date']:
+    for id in main_dict['id']:
+        index = main_dict['id'].index(id)
+        i = main_dict['date'][index]
         if year in str(i)[0:2]:
             if str(i)[2:4] in month_expence.keys():
-                month_expence[str(i)[2:4]] += expences[main_dict['date'].index(i)]
+                month_expence[str(i)[2:4]] += expences[index]
             else:
-                month_expence[str(i)[2:4]] = expences[main_dict['date'].index(i)]
+                month_expence[str(i)[2:4]] = expences[index]
     l3 = list(month_expence.keys())
     l3.sort()
     l4  = list()

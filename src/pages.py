@@ -776,7 +776,14 @@ def graph_page():
             # Plot data based on the selected graph type
             if (graph_selected == 'pie chart'):
                 amount, tag = pie_individual_tag(main_dict, year_selected, month_selected)
-                plot1.pie(amount, labels=tag, autopct='%1.1f%%')
+                def autopct_format(values):
+                    def my_format(pct):
+                        total = sum(values)
+                        val = int(round(pct*total/100.0))
+                        return '{:.1f}%\n({v:d})'.format(pct, v=val)
+                    return my_format
+
+                plot1.pie(amount, labels=tag, autopct=autopct_format(amount))
 
 
             elif (graph_selected == 'bar chart'):
